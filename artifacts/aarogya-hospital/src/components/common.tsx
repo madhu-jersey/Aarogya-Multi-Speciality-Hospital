@@ -19,10 +19,6 @@ export function Logo({ className = '' }: { className?: string }) {
   );
 }
 
-function FacebookIcon() {
-  return <svg className="icon" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.96h-1.51c-1.49 0-1.96.93-1.96 1.88v2.27h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z" /></svg>;
-}
-
 export function Icon({ name, className = '' }: { name: 'check' | 'heart' | 'clock' | 'pin' | 'arrow' | 'down' | 'phone' | 'external'; className?: string }) {
   const props = { className: `icon ${className}`, 'aria-hidden': true as const };
   if (name === 'check') return <Check {...props} />;
@@ -103,7 +99,6 @@ export function Header() {
         <nav className="nav" aria-label="Main navigation">
           {links.map((link) => <a key={link.id} className={active === link.id ? 'active' : ''} href={`#${link.id}`}>{link.label}</a>)}
         </nav>
-        <a className="header-facebook" href={HOSPITAL_INFO.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Aarogya Multi Speciality Hospital on Facebook"><FacebookIcon /></a>
         <a className="button button-small header-call" href={TEL} aria-label={`Call ${HOSPITAL} at ${PHONE}`}><Icon name="phone" />Call</a>
         <button className="menu-toggle" type="button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <X className="icon" /> : <Menu className="icon" />}

@@ -426,10 +426,6 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
   animation: heroFadeUp .72s .12s cubic-bezier(.22,1,.36,1) both;
 }
 .hero-actions .button { min-height: 58px; }
-.header-facebook { width: 44px; height: 44px; flex: 0 0 44px; display: inline-grid; place-items: center; border: 1px solid rgba(168,25,95,.4); border-radius: 50%; background: #fff; color: var(--magenta); transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, background .25s; }
-.header-facebook:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(168,25,95,.17); background: #FBF3F7; }
-.header-facebook:active { transform: scale(.98); }
-.header-facebook:focus-visible { outline: 2px solid var(--magenta); outline-offset: 3px; box-shadow: 0 0 0 5px rgba(168,25,95,.2); }
 .hero-actions .button-outline { border-color: var(--teal); color: var(--teal-dark); }
 .hero-actions .button-outline:before { background: rgba(14,124,123,.08); }
 .hero-emergency {
@@ -538,13 +534,13 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
 .doctors-section { background: #fff; }
 .doctors-section h2 { font-family: 'DM Sans', sans-serif; font-weight: 700; color: var(--magenta); }
 .doctors-section h2 em { font-family: 'Playfair Display', serif; font-weight: 600; }
-.doctors-section .doctors-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+.doctors-section .doctors-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
 .doctors-section .doctor-card {
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
   align-items: center;
-  gap: clamp(28px, 4vw, 56px);
+  gap: 40px;
   min-height: 0;
-  padding: 40px;
+  padding: 32px;
   border: 1px solid rgba(168,25,95,.12);
   border-radius: 24px;
   background: #FBF3F7;
@@ -580,9 +576,9 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
 }
 .doctors-section .doctor-details { min-width: 0; }
 .doctors-section .doctor-specialty {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   color: var(--teal);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: .02em;
   transition: none;
@@ -590,10 +586,10 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
 .doctors-section .doctor-card:hover .doctor-specialty { transform: none; }
 .doctors-section .doctor-details h3 {
   width: auto;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: #3A1F2E;
   font-family: 'DM Sans', sans-serif;
-  font-size: clamp(25px, 2.7vw, 36px);
+  font-size: 32px;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -.035em;
@@ -607,11 +603,12 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
-.doctors-section .doctor-divider { height: 1px; margin: 22px 0 18px; border: 0; background: rgba(11,79,78,.2); }
-.doctors-section .doctor-details h4 { margin: 0 0 10px; color: var(--teal-dark); font-size: 16px; font-weight: 700; }
+.doctors-section .doctor-divider { height: 1px; margin: 12px 0 10px; border: 0; background: rgba(11,79,78,.2); }
+.doctors-section .doctor-details h4 { margin: 0 0 7px; color: var(--teal-dark); font-size: 16px; font-weight: 700; }
 .doctors-section .doctor-care { display: flex; align-items: flex-start; gap: 10px; margin: 0; color: #3D3039; font-size: 16px; line-height: 1.55; }
 .doctors-section .doctor-care svg { width: 20px; height: 20px; margin-top: 3px; flex: 0 0 auto; color: var(--teal); stroke-width: 2.5; }
 .doctors-section .doctor-availability { margin: 7px 0 18px 30px; color: #5B4A55; font-size: 15px; }
+.doctors-section .doctor-time-slot { gap: 8px; font-size: 15px; }
 .doctors-section .doctor-book { min-height: 48px; padding: 0 22px; }
 .doctors-section .doctor-book:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
 
@@ -630,9 +627,11 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
 /* Alternating reveal and refined motion for the doctor cards. */
 .doctors-section .doctor-card.reveal {
   --card-delay: 0ms;
-  grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+  grid-template-columns: minmax(0, 40fr) minmax(0, 60fr);
   grid-template-areas: 'portrait details';
-  align-items: stretch;
+  align-items: center;
+  height: 420px;
+  max-height: 420px;
   overflow: hidden;
   opacity: 1;
   transform: none;
@@ -641,7 +640,7 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
     box-shadow 300ms ease, border-color 300ms ease;
 }
 .has-reveal-observer .doctors-section .doctor-card.reveal:not(.is-visible) { opacity: 0; transform: translateY(24px); }
-.doctors-section .doctor-card--image-right { grid-template-areas: 'details portrait' !important; }
+.doctors-section .doctor-card.reveal.doctor-card--image-right { grid-template-columns: minmax(0, 60fr) minmax(0, 40fr); grid-template-areas: 'details portrait' !important; }
 .doctors-section .doctor-card.reveal.is-visible { opacity: 1; transform: translateY(0); }
 .doctors-section .doctor-portrait {
   grid-area: portrait;
@@ -650,7 +649,9 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
   min-width: 0;
   min-height: 0;
   height: auto;
-  aspect-ratio: 4 / 5;
+  width: min(100%, 354px);
+  max-height: 400px;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 20px;
   background: linear-gradient(135deg, #F8EAF2, #F1D6E5 52%, #EABBD2);
@@ -727,7 +728,9 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
 @media (max-width: 767px) {
   .doctors-section .doctor-card.reveal,
   .doctors-section .doctor-card--image-right { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'portrait' 'details' !important; }
-  .doctors-section .doctor-portrait { width: 100%; min-height: 0; height: auto; aspect-ratio: 4 / 5; transform: none; }
+  .doctors-section .doctor-card.reveal.doctor-card--image-right { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'portrait' 'details' !important; }
+  .doctors-section .doctor-card.reveal { height: auto; max-height: none; gap: 20px; padding: 20px; }
+  .doctors-section .doctor-portrait { width: 100%; max-width: none; max-height: 300px; min-height: 0; height: auto; aspect-ratio: 4 / 3; transform: none; }
   .has-reveal-observer .doctors-section .doctor-card:not(.is-visible) .doctor-portrait { transform: translateY(20px); }
   .doctors-section .doctor-card.reveal.is-visible .doctor-portrait { transform: none; }
   .doctors-section .doctor-card:hover .doctor-portrait { transform: translateY(0); }
