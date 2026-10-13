@@ -259,17 +259,137 @@ const galleryPhotos = [
   { src: '/assets/gallery/reception.png', srcSet: '/assets/gallery/reception-480.webp 480w, /assets/gallery/reception-768.webp 768w', caption: 'Reception', alt: `Reception desk at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 768, height: 1610 },
 ];
 
+const galleryImageCache = new Map<number, Promise<HTMLImageElement>>();
+const gallerySizes = '(max-width: 1100px) 90vw, 1080px';
+
+function loadDecodedGalleryPhoto(index: number) {
+  const cached = galleryImageCache.get(index);
+  if (cached) return cached;
+  const photo = galleryPhotos[index];
+  const image = new Image();
+  const ready = new Promise<HTMLImageElement>((resolve, reject) => {
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error(`Unable to load ${photo.src}`));
+    image.sizes = gallerySizes;
+    image.srcset = photo.srcSet;
+    image.src = photo.src;
+    if (image.complete && image.naturalWidth) resolve(image);
+  }).then(async (loadedImage) => {
+    if (typeof loadedImage.decode === 'function') await loadedImage.decode();
+    return loadedImage;
+  }).catch((error: unknown) => {
+    galleryImageCache.delete(index);
+    throw error;
+  });
+  galleryImageCache.set(index, ready);
+  return ready;
+}
+
+function getLightboxSize(width: number, height: number) {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const mobile = viewportWidth < 768;
+  const maxWidth = mobile ? viewportWidth - 24 : Math.min(viewportWidth * 0.92, viewportWidth - 176);
+  const maxHeight = mobile ? Math.max(100, viewportHeight * 0.85 - 72) : viewportHeight * 0.88;
+  const scale = Math.min(maxWidth / width, maxHeight / height);
+  return { width: Math.round(width * scale), height: Math.round(height * scale) };
+}
+
 export function HospitalGallery() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
+  const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null);
+  const [isCrossfading, setIsCrossfading] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const opener = useRef<HTMLButtonElement | null>(null);
   const closeButton = useRef<HTMLButtonElement | null>(null);
   const dialog = useRef<HTMLDivElement | null>(null);
+  const incomingImage = useRef<HTMLImageElement | null>(null);
   const touchStart = useRef<number | null>(null);
   const closeTimer = useRef<number | null>(null);
+  const finishSwitchTimer = useRef<number | null>(null);
+  const unlockSwitchTimer = useRef<number | null>(null);
+  const switchLocked = useRef(false);
+  const pendingIndexRef = useRef<number | null>(null);
+  const switchRequest = useRef(0);
+
+  const clearSwitch = useCallback(() => {
+    switchRequest.current += 1;
+    switchLocked.current = false;
+    pendingIndexRef.current = null;
+    if (finishSwitchTimer.current !== null) window.clearTimeout(finishSwitchTimer.current);
+    if (unlockSwitchTimer.current !== null) window.clearTimeout(unlockSwitchTimer.current);
+    finishSwitchTimer.current = null;
+    unlockSwitchTimer.current = null;
+    setPendingIndex(null);
+    setIsCrossfading(false);
+  }, []);
+
+  const movePhoto = useCallback((direction: number) => {
+    if (activeIndex === null || switchLocked.current || isClosing) return;
+    const nextIndex = (activeIndex + direction + galleryPhotos.length) % galleryPhotos.length;
+    switchLocked.current = true;
+    const request = ++switchRequest.current;
+    void loadDecodedGalleryPhoto(nextIndex).then((decodedImage) => {
+      if (request !== switchRequest.current) return;
+      const width = decodedImage.naturalWidth || galleryPhotos[nextIndex].width;
+      const height = decodedImage.naturalHeight || galleryPhotos[nextIndex].height;
+      pendingIndexRef.current = nextIndex;
+      setPendingIndex(nextIndex);
+      setFrameSize(getLightboxSize(width, height));
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        setActiveIndex(nextIndex);
+        pendingIndexRef.current = null;
+        setPendingIndex(null);
+        switchLocked.current = false;
+        return;
+      }
+      const beginCrossfade = (attempt: number) => {
+        if (request !== switchRequest.current) return;
+        const image = incomingImage.current;
+        if (!image) {
+          if (attempt < 3) requestAnimationFrame(() => beginCrossfade(attempt + 1));
+          else {
+            pendingIndexRef.current = null;
+            setPendingIndex(null);
+            setFrameSize(getLightboxSize(galleryPhotos[activeIndex].width, galleryPhotos[activeIndex].height));
+            switchLocked.current = false;
+          }
+          return;
+        }
+        const decoded = typeof image.decode === 'function' ? image.decode() : Promise.resolve();
+        void decoded.then(() => {
+          if (request !== switchRequest.current) return;
+          setIsCrossfading(true);
+          finishSwitchTimer.current = window.setTimeout(() => {
+            if (request !== switchRequest.current) return;
+            setActiveIndex(nextIndex);
+            pendingIndexRef.current = null;
+            setPendingIndex(null);
+            setIsCrossfading(false);
+            finishSwitchTimer.current = null;
+          }, 350);
+          unlockSwitchTimer.current = window.setTimeout(() => {
+            if (request === switchRequest.current) switchLocked.current = false;
+            unlockSwitchTimer.current = null;
+          }, 450);
+        }).catch(() => {
+          if (request !== switchRequest.current) return;
+          pendingIndexRef.current = null;
+          setPendingIndex(null);
+          setFrameSize(getLightboxSize(galleryPhotos[activeIndex].width, galleryPhotos[activeIndex].height));
+          switchLocked.current = false;
+        });
+      };
+      requestAnimationFrame(() => beginCrossfade(0));
+    }).catch(() => {
+      if (request === switchRequest.current) switchLocked.current = false;
+    });
+  }, [activeIndex, isClosing]);
 
   const closeLightbox = useCallback(() => {
     if (closeTimer.current !== null) return;
+    clearSwitch();
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setActiveIndex(null);
       requestAnimationFrame(() => opener.current?.focus());
@@ -281,8 +401,8 @@ export function HospitalGallery() {
       setActiveIndex(null);
       setIsClosing(false);
       requestAnimationFrame(() => opener.current?.focus());
-    }, 190);
-  }, []);
+    }, 300);
+  }, [clearSwitch]);
 
   useEffect(() => {
     if (activeIndex === null) return;
@@ -291,8 +411,8 @@ export function HospitalGallery() {
     closeButton.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') closeLightbox();
-      if (event.key === 'ArrowRight') setActiveIndex((index) => index === null ? 0 : (index + 1) % galleryPhotos.length);
-      if (event.key === 'ArrowLeft') setActiveIndex((index) => index === null ? 0 : (index - 1 + galleryPhotos.length) % galleryPhotos.length);
+      if (event.key === 'ArrowRight') { event.preventDefault(); movePhoto(1); }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); movePhoto(-1); }
       if (event.key === 'Tab' && dialog.current) {
         const focusable = [...dialog.current.querySelectorAll<HTMLElement>('button:not(:disabled)')];
         const first = focusable[0];
@@ -306,10 +426,31 @@ export function HospitalGallery() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [activeIndex, closeLightbox]);
-  const movePhoto = (direction: number) => {
-    setActiveIndex((index) => index === null ? null : (index + direction + galleryPhotos.length) % galleryPhotos.length);
-  };
+  }, [activeIndex, closeLightbox, movePhoto]);
+
+  useEffect(() => {
+    if (activeIndex === null) return;
+    [
+      (activeIndex + 1) % galleryPhotos.length,
+      (activeIndex - 1 + galleryPhotos.length) % galleryPhotos.length,
+    ].forEach((index) => { void loadDecodedGalleryPhoto(index).catch(() => undefined); });
+  }, [activeIndex]);
+
+  useEffect(() => {
+    if (activeIndex === null) return;
+    const resizeFrame = () => {
+      const photo = galleryPhotos[pendingIndexRef.current ?? activeIndex];
+      setFrameSize(getLightboxSize(photo.width, photo.height));
+    };
+    window.addEventListener('resize', resizeFrame);
+    return () => window.removeEventListener('resize', resizeFrame);
+  }, [activeIndex]);
+
+  useEffect(() => () => {
+    if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
+    if (finishSwitchTimer.current !== null) window.clearTimeout(finishSwitchTimer.current);
+    if (unlockSwitchTimer.current !== null) window.clearTimeout(unlockSwitchTimer.current);
+  }, []);
 
   return (
     <section className="section gallery-section" id="gallery">
@@ -323,7 +464,13 @@ export function HospitalGallery() {
               key={photo.src}
               style={{ transitionDelay: `${index * 90}ms` }}
               aria-label={`Open ${photo.caption} photo`}
-              onClick={(event) => { opener.current = event.currentTarget; setActiveIndex(index); }}
+              onClick={(event) => {
+                opener.current = event.currentTarget;
+                clearSwitch();
+                setIsClosing(false);
+                setFrameSize(getLightboxSize(photo.width, photo.height));
+                setActiveIndex(index);
+              }}
             >
               <picture>
                 <source type="image/webp" srcSet={photo.srcSet} sizes={index === 0 ? '(max-width: 767px) 100vw, 50vw' : '(max-width: 767px) 50vw, 24vw'} />
@@ -351,22 +498,21 @@ export function HospitalGallery() {
         >
             <button className="gallery-arrow gallery-arrow-prev" type="button" aria-label="Previous photo" onClick={() => movePhoto(-1)}>‹</button>
             <div
-              className="gallery-lightbox-image"
-              style={{ '--lightbox-ratio': galleryPhotos[activeIndex].width / galleryPhotos[activeIndex].height, aspectRatio: `${galleryPhotos[activeIndex].width} / ${galleryPhotos[activeIndex].height}` } as CSSProperties}
+              className={`gallery-lightbox-image${isCrossfading ? ' is-crossfading' : ''}`}
+              style={frameSize ? { width: `${frameSize.width}px`, height: `${frameSize.height}px` } : undefined}
               onClick={(event) => event.stopPropagation()}
             >
-              <picture>
-                <source type="image/webp" srcSet={galleryPhotos[activeIndex].srcSet} sizes="(max-width: 1100px) 90vw, 1080px" />
-                <img src={galleryPhotos[activeIndex].src} alt={galleryPhotos[activeIndex].alt} width={galleryPhotos[activeIndex].width} height={galleryPhotos[activeIndex].height} onLoad={(event) => {
-                  const image = event.currentTarget;
-                  const frame = image.closest<HTMLElement>('.gallery-lightbox-image');
-                  if (frame && image.naturalWidth && image.naturalHeight) {
-                    frame.style.setProperty('--lightbox-ratio', String(image.naturalWidth / image.naturalHeight));
-                    frame.style.aspectRatio = `${image.naturalWidth} / ${image.naturalHeight}`;
-                  }
-                }} />
-              </picture>
-              <span className="gallery-lightbox-caption">{galleryPhotos[activeIndex].caption}</span>
+              {[activeIndex, ...(pendingIndex === null ? [] : [pendingIndex])].map((index) => {
+                const photo = galleryPhotos[index];
+                const isIncoming = index === pendingIndex;
+                return (
+                  <picture className={`gallery-lightbox-photo${isIncoming ? ' is-incoming' : ' is-outgoing'}`} key={photo.src}>
+                    <source type="image/webp" srcSet={photo.srcSet} sizes={gallerySizes} />
+                    <img ref={isIncoming ? incomingImage : undefined} src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} />
+                  </picture>
+                );
+              })}
+              <span className="gallery-lightbox-caption">{galleryPhotos[pendingIndex ?? activeIndex].caption}</span>
               <button className="gallery-close" ref={closeButton} type="button" aria-label="Close gallery" onClick={closeLightbox}>×</button>
             </div>
             <button className="gallery-arrow gallery-arrow-next" type="button" aria-label="Next photo" onClick={() => movePhoto(1)}>›</button>
