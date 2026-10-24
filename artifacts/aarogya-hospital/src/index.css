@@ -402,8 +402,9 @@ h2 em, h1 em { color: var(--magenta); font-family: 'Playfair Display', serif; fo
   letter-spacing: -.055em;
   animation: heroFadeUp .72s cubic-bezier(.22,1,.36,1) both;
 }
-.hero-title-name { font-family: 'DM Sans', sans-serif; font-weight: 700; }
-.hero-title-serif { font-family: 'Playfair Display', serif; font-size: .78em; font-weight: 600; font-style: italic; letter-spacing: -.045em; }
+.hero-title-name { margin-bottom: .14em; }
+.hero-wordmark { display: block; width: clamp(280px, 36vw, 520px); max-width: 100%; height: auto; }
+.hero-title-sub { font-family: 'Playfair Display', serif; font-size: .72em; font-weight: 700; font-style: normal; line-height: 1.08; letter-spacing: -.02em; }
 .hero-telugu {
   width: 100%;
   max-width: 100%;
@@ -1157,7 +1158,7 @@ body { overflow-x: clip; }
 .service-card h3 { min-height: 56px; margin: 20px 0 14px; font-size: clamp(21px, 1.8vw, 25px); line-height: 1.2; }
 .service-icon-well { width: 54px; height: 54px; flex: 0 0 54px; border: 1px solid rgba(168,25,95,.1); border-radius: 17px; background: linear-gradient(145deg, #FBF3F7, #F6E5EE); }
 .service-icon-well .icon { width: 26px; height: 26px; }
-.service-list { grid-template-columns: minmax(0,1fr); gap: 0; margin-top: auto; }
+.service-list { grid-template-columns: minmax(0,1fr); gap: 0; margin-top: 0; }
 .service-list li { min-width: 0; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(168,25,95,.09); line-height: 1.4; }
 .service-list li:last-child { border-bottom: 0; }
 .service-list .icon { width: 20px; height: 20px; flex: 0 0 20px; margin: 0; padding: 3px; border-radius: 50%; background: #F6E5EE; }
@@ -1173,4 +1174,351 @@ body { overflow-x: clip; }
   .service-card { min-height: 0; padding: 25px 23px; border-radius: 23px; }
   .service-card h3 { min-height: 0; margin: 16px 0 12px; font-size: 22px; }
   .service-list { margin-top: 0; }
+}
+
+/* Our story */
+.story-section { position: relative; overflow: hidden; background: linear-gradient(180deg, #fff 0%, #FBF3F7 100%); }
+.story-section:before { content: ''; position: absolute; top: -160px; right: -160px; width: 460px; height: 460px; border-radius: 50%; background: radial-gradient(circle, rgba(168,25,95,.07), transparent 70%); pointer-events: none; }
+.story-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(48px, 7vw, 104px); align-items: start; }
+.story-copy { position: sticky; top: calc(var(--header-height) + 32px); }
+.story-copy p { color: var(--muted); font-size: 17px; line-height: 1.75; margin-bottom: 18px; }
+.story-copy .story-lead { color: var(--text); font-size: clamp(19px, 1.6vw, 21px); line-height: 1.6; }
+.story-quote { position: relative; margin: 30px 0 0; padding: 26px 28px 24px; border: 1px solid rgba(168,25,95,.12); border-radius: 20px; background: #fff; box-shadow: 0 14px 36px rgba(58,31,46,.07); }
+.story-quote > svg { position: absolute; top: 18px; right: 20px; width: 34px; height: 34px; color: rgba(168,25,95,.16); }
+.story-quote blockquote { margin: 0 0 12px; color: var(--magenta); font-family: 'Playfair Display', serif; font-size: clamp(22px, 2vw, 27px); font-weight: 700; line-height: 1.3; letter-spacing: -.02em; }
+.story-quote figcaption { color: var(--muted); font-size: 13px; font-weight: 600; }
+.story-quote figcaption span { display: block; margin-bottom: 4px; color: var(--text); font-size: 15px; font-weight: 500; font-style: italic; }
+.story-timeline { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.story-timeline:before { content: ''; position: absolute; top: 30px; bottom: 30px; left: 27px; width: 2px; background: linear-gradient(180deg, var(--magenta), var(--teal)); opacity: .3; }
+.story-step { position: relative; padding: 24px 26px 24px 84px; border: 1px solid rgba(168,25,95,.1); border-radius: 22px; background: #fff; box-shadow: 0 10px 28px rgba(58,31,46,.05); transition: opacity 700ms cubic-bezier(.22,1,.36,1) var(--item-delay, 0ms), transform 700ms cubic-bezier(.22,1,.36,1) var(--item-delay, 0ms), box-shadow 400ms ease, border-color 400ms ease; }
+.story-step:hover { border-color: rgba(168,25,95,.22); box-shadow: 0 18px 40px rgba(58,31,46,.1); }
+.story-node { position: absolute; top: 22px; left: 8px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--magenta); box-shadow: 0 0 0 6px #FBF3F7, 0 8px 18px rgba(168,25,95,.25); }
+.story-step:last-child .story-node { background: var(--teal); box-shadow: 0 0 0 6px #FBF3F7, 0 8px 18px rgba(14,124,123,.25); }
+.story-node svg { width: 20px; height: 20px; stroke-width: 2; }
+.story-when { margin: 0 0 4px; color: var(--teal); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.story-step h3 { margin: 0 0 8px; font-size: 21px; line-height: 1.25; }
+.story-step p:last-child { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+.story-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 22px 0 0; border-radius: 22px; overflow: hidden; background: var(--teal-dark); }
+.story-stats > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 2px; padding: 20px 14px; text-align: center; }
+.story-stats > div + div { border-left: 1px solid rgba(255,255,255,.14); }
+.story-stats dd { margin: 0; color: #fff; font-size: clamp(24px, 2.3vw, 30px); font-weight: 700; line-height: 1.1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.story-stats dt { color: #CDE8E3; font-size: 12px; font-weight: 600; line-height: 1.35; }
+@media (max-width: 1023px) {
+  .story-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .story-copy { position: static; }
+}
+@media (max-width: 767px) {
+  .story-step { padding: 20px 18px 20px 70px; border-radius: 18px; }
+  .story-timeline:before { left: 23px; }
+  .story-node { left: 4px; width: 38px; height: 38px; }
+  .story-step h3 { font-size: 18px; }
+  .story-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .story-stats > div:nth-child(3) { border-left: 0; }
+  .story-stats > div:nth-child(n + 3) { border-top: 1px solid rgba(255,255,255,.14); }
+  .story-quote { padding: 22px 20px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-step { transition: none; }
+}
+
+/* Trust strip: six items */
+.trust-band .trust-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.trust-band .trust-item { gap: 10px; font-size: 14px; line-height: 1.3; }
+@media (max-width: 1199px) {
+  .trust-band .trust-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 18px; }
+  .trust-band .trust-item { justify-content: flex-start; }
+}
+@media (max-width: 767px) {
+  .trust-band .trust-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+  .trust-band .trust-item { font-size: 12px; }
+}
+
+/* ==========================================================================
+   Premium motion layer
+   Reveals run as animations on translate/opacity/filter so they never fight
+   the transform-based hover effects defined above.
+   ========================================================================== */
+:root {
+  --ease-premium: cubic-bezier(.16, 1, .3, 1);
+  --ease-soft: cubic-bezier(.22, 1, .36, 1);
+  --reveal-y: 34px;
+  --reveal-blur: 8px;
+  --reveal-duration: 1100ms;
+}
+
+/* Base reveal: rise, sharpen, and fade in, staggered by --reveal-delay from the observer. */
+.has-reveal-observer .reveal:not(.doctor-card):not(.is-visible) { opacity: 0; transform: none; translate: 0 var(--reveal-y); }
+.has-reveal-observer .reveal.is-visible:not(.doctor-card) { animation: premiumReveal var(--reveal-duration) var(--ease-premium) var(--reveal-delay, 0ms) both; }
+/* Reveal stagger now lives in the animation, so hover transitions respond instantly. */
+.reveal.is-visible:not(.doctor-card) { transition-delay: 0ms !important; }
+.visit-section .map-card.reveal, .visit-section .map-card.reveal.is-visible { transform: none; }
+.visit-section .map-card:hover { transform: translateY(-4px); }
+
+/* Cards settle with a whisper of scale on top of the rise. */
+.has-reveal-observer :is(.feature-tile, .service-card, .why-card, .review-card, .story-step, .faq-item, .gallery-tile, .map-card, .story-stats).is-visible,
+.has-reveal-observer .feature-grid > .reveal.is-visible { animation-name: premiumRevealCard; }
+
+/* Doctor cards keep their own choreography; give it the premium curve and timing. */
+.doctors-section .doctor-card.reveal {
+  transition: opacity 1000ms var(--ease-premium) var(--card-delay), transform 1100ms var(--ease-premium) var(--card-delay), box-shadow 300ms ease, border-color 300ms ease;
+}
+.doctors-section .doctor-portrait { transition: transform 1100ms var(--ease-premium) var(--card-delay); }
+
+/* Image curtains: photos wipe up into place and settle from a slight zoom. */
+.has-reveal-observer .gallery-tile:not(.is-visible) > picture,
+.has-reveal-observer .doctor-card:not(.is-visible) .doctor-photo { clip-path: inset(100% 0 0 0); }
+.gallery-tile.is-visible > picture { animation: imageCurtain 1300ms var(--ease-premium) calc(var(--reveal-delay, 0ms) + 120ms) both; }
+.gallery-tile.is-visible > picture img { animation: imageSettle 1700ms var(--ease-premium) calc(var(--reveal-delay, 0ms) + 120ms) both; }
+.has-reveal-observer .gallery-tile:not(.is-visible) .gallery-caption { opacity: 0; translate: 0 10px; }
+.gallery-tile.is-visible .gallery-caption { animation: captionIn 800ms var(--ease-premium) calc(var(--reveal-delay, 0ms) + 650ms) both; }
+.doctor-card.is-visible .doctor-photo { animation: imageCurtain 1300ms var(--ease-premium) calc(var(--card-delay, 0ms) + 150ms) both, imageSettle 1800ms var(--ease-premium) calc(var(--card-delay, 0ms) + 150ms) both; }
+
+/* Story timeline: the connecting line draws down as the milestones arrive. */
+.has-reveal-observer .story-timeline:before { transform: scaleY(0); transform-origin: top; transition: transform 1800ms var(--ease-premium) 200ms; }
+.has-reveal-observer .story-timeline:has(.story-step.is-visible):before { transform: scaleY(1); }
+.story-step.is-visible .story-node { animation: nodePop 900ms var(--ease-premium) calc(var(--reveal-delay, 0ms) + 250ms) both; }
+
+/* Eyebrow labels open their tracking as they appear. */
+.has-reveal-observer .section-label.reveal.is-visible { animation-name: labelReveal; }
+
+/* Service, why-card, and facility icons pop in just after their card. */
+.service-card.is-visible .service-icon-well, .why-card.is-visible .why-icon { animation: iconPop 900ms var(--ease-premium) calc(var(--reveal-delay, 0ms) + 220ms) both; }
+.facilities-grid .facility-item.is-visible .icon { animation: iconPop 900ms var(--ease-premium) calc(var(--reveal-delay, 0ms) + 180ms) both; }
+.service-card.is-visible .service-list li { animation: listIn 700ms var(--ease-premium) both; }
+.service-card.is-visible .service-list li:nth-child(1) { animation-delay: calc(var(--reveal-delay, 0ms) + 260ms); }
+.service-card.is-visible .service-list li:nth-child(2) { animation-delay: calc(var(--reveal-delay, 0ms) + 300ms); }
+.service-card.is-visible .service-list li:nth-child(3) { animation-delay: calc(var(--reveal-delay, 0ms) + 340ms); }
+.service-card.is-visible .service-list li:nth-child(4) { animation-delay: calc(var(--reveal-delay, 0ms) + 380ms); }
+.service-card.is-visible .service-list li:nth-child(5) { animation-delay: calc(var(--reveal-delay, 0ms) + 420ms); }
+.service-card.is-visible .service-list li:nth-child(6) { animation-delay: calc(var(--reveal-delay, 0ms) + 460ms); }
+.service-card.is-visible .service-list li:nth-child(7) { animation-delay: calc(var(--reveal-delay, 0ms) + 500ms); }
+.service-card.is-visible .service-list li:nth-child(8) { animation-delay: calc(var(--reveal-delay, 0ms) + 540ms); }
+.service-card.is-visible .service-list li:nth-child(n + 9) { animation-delay: calc(var(--reveal-delay, 0ms) + 580ms); }
+
+/* Smooth, tactile interaction finish. */
+.button, .write-review-button, .faq-trigger, .gallery-tile, .header-call, .menu-toggle { transition-timing-function: var(--ease-soft); }
+.button:not(.button-outline):not(.header-call) { position: relative; overflow: hidden; isolation: isolate; }
+.button:not(.button-outline):not(.header-call):after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.28) 50%, transparent 70%);
+  translate: -120% 0;
+  transition: translate 900ms var(--ease-premium);
+}
+@media (hover: hover) and (pointer: fine) {
+  .button:not(.button-outline):not(.header-call):hover:after { translate: 120% 0; }
+}
+.faq-item { transition: box-shadow 400ms var(--ease-soft), border-color 400ms ease; }
+.faq-item:has(.faq-trigger[aria-expanded="true"]) { border-color: rgba(14,124,123,.22); box-shadow: 0 16px 36px rgba(58,31,46,.08); }
+
+/* Touch screens: no hover lift, but a soft press response on everything tappable. */
+@media (hover: none), (pointer: coarse) {
+  .button, .write-review-button, .faq-trigger, .gallery-tile, .service-card, .feature-tile, .why-card, .review-card, .story-step, .doctor-book, .mobile-panel a {
+    transition: transform 260ms var(--ease-soft), box-shadow 260ms var(--ease-soft), background-color 260ms ease, opacity 260ms ease;
+  }
+  .button:active, .write-review-button:active, .doctor-book:active, .header-call:active, .menu-toggle:active { transform: scale(.96) !important; }
+  .gallery-tile:active, .service-card:active, .feature-tile:active, .why-card:active, .review-card:active, .story-step:active { transform: scale(.985) !important; }
+  .faq-trigger:active { background: rgba(14,124,123,.05); }
+  .mobile-panel a:active { opacity: .6; }
+}
+
+/* Phones: shorter travel and lighter blur keep reveals smooth on smaller GPUs. */
+@media (max-width: 767px) {
+  :root { --reveal-y: 24px; --reveal-blur: 4px; --reveal-duration: 950ms; }
+}
+
+@keyframes premiumReveal {
+  from { opacity: 0; translate: 0 var(--reveal-y); filter: blur(var(--reveal-blur)); }
+  to { opacity: 1; translate: 0 0; filter: none; }
+}
+@keyframes premiumRevealCard {
+  from { opacity: 0; translate: 0 var(--reveal-y); scale: .97; filter: blur(var(--reveal-blur)); }
+  to { opacity: 1; translate: 0 0; scale: 1; filter: none; }
+}
+@keyframes labelReveal {
+  from { opacity: 0; translate: 0 12px; letter-spacing: .34em; }
+  to { opacity: 1; translate: 0 0; letter-spacing: .16em; }
+}
+@keyframes imageCurtain { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes imageSettle { from { scale: 1.14; } to { scale: 1; } }
+@keyframes captionIn { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+@keyframes iconPop { from { opacity: 0; scale: .6; rotate: -12deg; } to { opacity: 1; scale: 1; rotate: 0deg; } }
+@keyframes nodePop { from { scale: 0; } 70% { scale: 1.12; } to { scale: 1; } }
+@keyframes listIn { from { opacity: 0; translate: -10px 0; } to { opacity: 1; translate: 0 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .has-reveal-observer .reveal:not(.is-visible) { opacity: 1 !important; translate: none !important; }
+  .reveal, .reveal *, .gallery-tile > picture, .gallery-tile > picture img, .doctor-photo, .story-node, .gallery-caption { animation: none !important; clip-path: none !important; filter: none !important; translate: none !important; scale: none !important; }
+  .story-timeline:before { transform: none !important; transition: none !important; }
+  .button:after { display: none; }
+}
+
+/* ==========================================================================
+   Language toggle, Instagram, and Telugu typography
+   ========================================================================== */
+
+/* Every text stack falls back to Noto Sans Telugu, so Telugu glyphs always render in the brand family. */
+body, button, a, .faq-trigger { font-family: 'DM Sans', 'Noto Sans Telugu', sans-serif; }
+h2 em, h1 em, .hero-title-sub, .story-quote blockquote { font-family: 'Playfair Display', 'Noto Sans Telugu', serif; }
+
+/* Smooth crossfade while the words swap. */
+main, footer, .nav { transition: opacity 180ms ease; }
+.is-switching-lang main, .is-switching-lang footer, .is-switching-lang .nav { opacity: 0; }
+
+/* EN | తె segmented toggle with a sliding thumb. */
+.lang-toggle {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  height: 44px;
+  padding: 4px;
+  border: 1px solid rgba(168,25,95,.18);
+  border-radius: 999px;
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 6px 18px rgba(58,31,46,.06);
+}
+.lang-toggle-thumb {
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: var(--magenta);
+  box-shadow: 0 4px 12px rgba(168,25,95,.28);
+  transition: translate 520ms var(--ease-premium);
+}
+.lang-toggle[data-lang="te"] .lang-toggle-thumb { translate: 100% 0; }
+.lang-toggle button {
+  position: relative;
+  z-index: 1;
+  min-width: 42px;
+  height: 100%;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--teal-dark);
+  font: 700 13px/1 'DM Sans', 'Noto Sans Telugu', sans-serif;
+  letter-spacing: .02em;
+  cursor: pointer;
+  transition: color 320ms ease;
+}
+.lang-toggle button[lang="te"] { font-size: 15px; }
+.lang-toggle button[aria-pressed="true"] { color: #fff; }
+.lang-toggle button:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; box-shadow: none; }
+.header-lang { margin-left: 4px; }
+
+/* Instagram: header icon, mobile-menu row, Visit card, footer link. */
+.header-instagram {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(168,25,95,.18);
+  border-radius: 50%;
+  color: var(--magenta);
+  background: rgba(255,255,255,.9);
+  transition: color 300ms ease, background-color 300ms ease, transform 300ms var(--ease-soft), border-color 300ms ease;
+}
+.header-instagram .icon { width: 20px; height: 20px; }
+.header-instagram:hover { color: #fff; border-color: transparent; background: linear-gradient(135deg, #A8195F, #D6457F 55%, #F08A4B); transform: translateY(-2px); }
+@media (max-width: 1199px) { .header-instagram { display: none; } }
+
+.mobile-panel .mobile-instagram { gap: 10px; color: var(--magenta); border-bottom: 0; }
+.mobile-panel .mobile-instagram .icon { width: 20px; height: 20px; }
+
+.instagram-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid rgba(168,25,95,.14);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(58,31,46,.07);
+  color: var(--text);
+  transition: transform 450ms var(--ease-soft), box-shadow 450ms var(--ease-soft), border-color 300ms ease;
+}
+.instagram-card:hover { transform: translateY(-4px); border-color: rgba(168,25,95,.26); box-shadow: 0 20px 44px rgba(58,31,46,.12); }
+.instagram-card-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #A8195F, #D6457F 55%, #F08A4B);
+  box-shadow: 0 8px 20px rgba(168,25,95,.25);
+}
+.instagram-card-icon .icon { width: 26px; height: 26px; }
+.instagram-card-copy { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.instagram-card-copy strong { font-size: 16px; line-height: 1.3; }
+.instagram-card-copy > span { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.instagram-card-copy .instagram-card-handle { color: var(--magenta); font-weight: 700; overflow-wrap: anywhere; }
+.instagram-card-arrow { width: 20px; height: 20px; color: var(--magenta); opacity: .5; transition: opacity 300ms ease, translate 300ms var(--ease-soft); }
+.instagram-card:hover .instagram-card-arrow { opacity: 1; translate: 2px -2px; }
+
+.footer-connect .footer-instagram { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: #F2C6DB; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.footer-connect .footer-instagram .icon { width: 18px; height: 18px; flex: 0 0 18px; }
+.footer-connect .footer-instagram:hover { color: #fff; }
+
+/* Header fit: the toggle and call button share the right edge. */
+@media (max-width: 1279px) and (min-width: 768px) {
+  .nav { gap: 18px; }
+  .header-inner { gap: 16px; }
+}
+@media (max-width: 767px) {
+  .header-inner { gap: 6px; }
+  .lang-toggle { height: 40px; padding: 3px; }
+  .lang-toggle-thumb { top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); }
+  .lang-toggle button { min-width: 34px; padding: 0 6px; font-size: 12px; }
+  .lang-toggle button[lang="te"] { font-size: 14px; }
+  .header-lang { margin-left: auto; }
+  .header-call { margin-left: 0; }
+  .instagram-card { gap: 14px; padding: 16px; }
+  .instagram-card-icon { width: 46px; height: 46px; border-radius: 14px; }
+}
+@media (max-width: 389px) {
+  .header-call { padding: 0 11px; font-size: 13px; }
+  .header-call .icon { display: none; }
+}
+
+/* Telugu typography: no negative tracking (it breaks conjuncts), taller lines, slightly calmer sizes. */
+.lang-te body { line-height: 1.8; }
+.lang-te h1, .lang-te h2, .lang-te h3, .lang-te h4, .lang-te .hero-title-sub, .lang-te h2 em, .lang-te .doctor-details h3, .lang-te .faq-trigger { letter-spacing: 0 !important; }
+.lang-te h2 { font-size: clamp(30px, 4.2vw, 48px); line-height: 1.35; }
+.lang-te h3 { line-height: 1.4; }
+.lang-te h2 em, .lang-te .hero-title-sub, .lang-te .story-quote blockquote { font-style: normal; }
+.lang-te .hero h1.hero-title { line-height: 1.2; }
+.lang-te .hero-title-sub { font-size: .6em; line-height: 1.3; }
+.lang-te .hero-telugu { font-family: 'DM Sans', sans-serif; font-weight: 600; letter-spacing: -.01em; }
+.lang-te .section-label, .lang-te .story-when { letter-spacing: .02em; }
+.lang-te.has-reveal-observer .section-label.reveal.is-visible { animation-name: premiumReveal; }
+.lang-te .doctors-section .doctor-details h3 { font-size: clamp(22px, 2.3vw, 28px); line-height: 1.35; }
+.lang-te .service-card h3 { font-size: clamp(19px, 1.6vw, 22px); line-height: 1.4; }
+.lang-te .hours-row.hospital-timing-slot span, .lang-te .hero .hours-row.hospital-timing-slot span:last-child { white-space: normal; }
+.lang-te .reviews-score strong { letter-spacing: -.04em; }
+.lang-te .nav a { font-size: 15px; }
+.lang-te .hero-actions .button { white-space: normal; text-align: center; line-height: 1.3; }
+@media (max-width: 767px) {
+  .lang-te h2 { font-size: 30px; }
+  .lang-te .doctors-section .doctor-details h3 { font-size: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-toggle-thumb, .lang-toggle button, main, footer, .nav { transition: none !important; }
+}
+@media (max-width: 479px) {
+  .brand-telugu { display: none; }
+  .brand-name { font-size: 12px; line-height: 1.3; }
 }

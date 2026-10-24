@@ -2,8 +2,11 @@ export const HOSPITAL_INFO = {
   // Set the official website domain before public launch.
   siteDomain: 'YOUR-DOMAIN',
   facebookUrl: 'https://www.facebook.com/share/1BubDwUVjT/',
+  instagramUrl: 'https://www.instagram.com/aarogyamultyspecialtyhospital/',
+  instagramHandle: '@aarogyamultyspecialtyhospital',
   noindex: true,
   name: 'Aarogya Multi Speciality Hospital',
+  foundingYear: 2021,
   teluguName: 'ఆరోగ్య మల్టీ స్పెషాలిటీ హాస్పిటల్',
   address: 'Back Side of Padhma sri Function Hall, 34-10-4, Somanchi Vari street, opp. Lions Club of Sajjapuram, near Venkateswara Theatre, Venkatarayapuram',
   locality: 'Sajjapuram',
@@ -71,7 +74,7 @@ export const DOCTORS = [
 export const FAQ_ITEMS = [
   { question: 'Is the hospital open 24 hours?', answer: 'Emergency services are available 24 hours a day, 7 days a week. Clinic hours for each doctor are shown in the Clinic hours card above.' },
   { question: 'Is there an ambulance service?', answer: 'Yes. We offer 24/7 ambulance services.' },
-  { question: 'Which departments are available?', answer: 'Pulmonology and general medicine, general and laparoscopic surgery, urology, gynaecology and obstetrics, visiting rheumatology, and 24x7 emergency care, including poison, snake bite, and accident cases.' },
+  { question: 'Which departments are available?', answer: 'General medicine, pulmonology, visiting rheumatology, oncology, urology, general and laparoscopic surgery, neurosurgery, gynaecology, pregnancy and infertility care, and 24x7 emergency care, including poison, snake bite, and accident cases.' },
   { question: 'How do I book an appointment?', answer: `Call ${HOSPITAL_INFO.phone} and use the Call to book button on a doctor's card.` },
   { question: 'Where is the hospital?', answer: `${HOSPITAL_ADDRESS_DISPLAY.slice(0, -1)}.` },
 ] as const;

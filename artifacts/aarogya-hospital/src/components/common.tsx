@@ -1,6 +1,7 @@
-import { type PointerEvent as ReactPointerEvent, useEffect, useState } from 'react';
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, Clock3, HeartPulse, MapPin, Menu, Phone, X } from 'lucide-react';
+import { type PointerEvent as ReactPointerEvent, type ReactNode, useEffect, useState } from 'react';
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, Clock3, HeartPulse, Instagram, MapPin, Menu, Phone, X } from 'lucide-react';
 import { GOOGLE_REVIEWS, HOSPITAL_ADDRESS_DISPLAY, HOSPITAL_DIRECTIONS, HOSPITAL_INFO, HOSPITAL_TEL } from '@/lib/hospital';
+import { LanguageToggle, useLanguage } from '@/lib/i18n';
 
 export const HOSPITAL = HOSPITAL_INFO.name;
 export const TELUGU = HOSPITAL_INFO.teluguName;
@@ -19,7 +20,7 @@ export function Logo({ className = '' }: { className?: string }) {
   );
 }
 
-export function Icon({ name, className = '' }: { name: 'check' | 'heart' | 'clock' | 'pin' | 'arrow' | 'down' | 'phone' | 'external'; className?: string }) {
+export function Icon({ name, className = '' }: { name: 'check' | 'heart' | 'clock' | 'pin' | 'arrow' | 'down' | 'phone' | 'external' | 'instagram'; className?: string }) {
   const props = { className: `icon ${className}`, 'aria-hidden': true as const };
   if (name === 'check') return <Check {...props} />;
   if (name === 'heart') return <HeartPulse {...props} />;
@@ -28,7 +29,18 @@ export function Icon({ name, className = '' }: { name: 'check' | 'heart' | 'cloc
   if (name === 'arrow') return <ArrowRight {...props} />;
   if (name === 'down') return <ArrowDown {...props} />;
   if (name === 'phone') return <Phone {...props} />;
+  if (name === 'instagram') return <Instagram {...props} />;
   return <ArrowUpRight {...props} />;
+}
+
+export function InstagramLink({ className = '', children }: { className?: string; children?: ReactNode }) {
+  const { t } = useLanguage();
+  return (
+    <a className={className} href={HOSPITAL_INFO.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label={children ? undefined : t.instagram.aria}>
+      <Icon name="instagram" />
+      {children}
+    </a>
+  );
 }
 
 export function magneticPointerMove(event: ReactPointerEvent<HTMLAnchorElement>) {
@@ -45,18 +57,21 @@ export function magneticPointerLeave(event: ReactPointerEvent<HTMLAnchorElement>
   event.currentTarget.style.setProperty('--magnet-y', '0px');
 }
 
+const NAV_IDS = ['services', 'doctors', 'gallery', 'reviews', 'visit', 'faq'] as const;
+
 export function Header() {
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState('');
-  const links = [
-    { label: 'Services', id: 'services' },
-    { label: 'Doctors', id: 'doctors' },
-    { label: 'Gallery', id: 'gallery' },
-    { label: 'Reviews', id: 'reviews' },
-    { label: 'Visit us', id: 'visit' },
-    { label: 'FAQ', id: 'faq' },
-  ];
+  const labels: Record<(typeof NAV_IDS)[number], string> = {
+    services: t.nav.services,
+    doctors: t.nav.doctors,
+    gallery: t.nav.gallery,
+    reviews: t.nav.reviews,
+    visit: t.nav.visit,
+    faq: t.nav.faq,
+  };
 
   useEffect(() => {
     let frame = 0;
@@ -72,7 +87,7 @@ export function Header() {
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    const sections = links.map((link) => document.getElementById(link.id)).filter(Boolean) as HTMLElement[];
+    const sections = NAV_IDS.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     const observer = new IntersectionObserver((entries) => {
       const current = entries.find((entry) => entry.isIntersecting);
       if (current) setActive(current.target.id);
@@ -89,23 +104,28 @@ export function Header() {
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container header-inner">
-        <a className="brand" href="#home" aria-label="Aarogya Hospital home">
+        <a className="brand" href="#home" aria-label={t.header.homeAria}>
           <Logo />
           <span className="brand-copy">
             <span className="brand-name">{HOSPITAL}</span>
           <span className="brand-telugu telugu" lang="te">{TELUGU}</span>
           </span>
         </a>
-        <nav className="nav" aria-label="Main navigation">
-          {links.map((link) => <a key={link.id} className={active === link.id ? 'active' : ''} href={`#${link.id}`}>{link.label}</a>)}
+        <nav className="nav" aria-label={t.header.mainNav}>
+          {NAV_IDS.map((id) => <a key={id} className={active === id ? 'active' : ''} href={`#${id}`}>{labels[id]}</a>)}
         </nav>
-        <a className="button button-small header-call" href={TEL} aria-label={`Call ${HOSPITAL} at ${PHONE}`}><Icon name="phone" />Call</a>
-        <button className="menu-toggle" type="button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+        <LanguageToggle className="header-lang" />
+        <InstagramLink className="header-instagram" />
+        <a className="button button-small header-call" href={TEL} aria-label={t.header.callAria(PHONE)}><Icon name="phone" />{t.header.call}</a>
+        <button className="menu-toggle" type="button" aria-label={menuOpen ? t.header.closeMenu : t.header.openMenu} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <X className="icon" /> : <Menu className="icon" />}
         </button>
       </div>
-      <nav className={`mobile-panel ${menuOpen ? 'open' : ''}`} aria-label="Mobile navigation">
-        {links.map((link) => <a key={link.id} href={`#${link.id}`} onClick={closeMenu}>{link.label}</a>)}
+      <nav className={`mobile-panel ${menuOpen ? 'open' : ''}`} aria-label={t.header.mobileNav}>
+        {NAV_IDS.map((id) => <a key={id} href={`#${id}`} onClick={closeMenu}>{labels[id]}</a>)}
+        <InstagramLink className="mobile-instagram">
+          <span>{t.instagram.follow}</span>
+        </InstagramLink>
       </nav>
     </header>
   );

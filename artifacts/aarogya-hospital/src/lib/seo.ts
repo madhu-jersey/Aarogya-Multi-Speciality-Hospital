@@ -33,7 +33,6 @@ export function updateSearchMetadata(pathname: string, configuredSiteUrl?: strin
   const logoUrl = new URL(HOSPITAL_INFO.logo, `${origin}/`).href;
   const imageUrl = new URL(HOSPITAL_INFO.image, `${origin}/`).href;
 
-  document.documentElement.lang = 'en';
   document.title = HOSPITAL_INFO.title;
   setMeta('meta[name="description"]', 'name', 'description', HOSPITAL_INFO.description);
   const robotsContent = HOSPITAL_INFO.noindex || isLocal ? 'noindex, nofollow' : isHome ? 'index, follow' : 'noindex, nofollow';
@@ -83,7 +82,8 @@ export function updateSearchMetadata(pathname: string, configuredSiteUrl?: strin
       logo: logoUrl,
       image: imageUrl,
       description: '24x7 emergency services',
-      sameAs: [],
+      foundingDate: String(HOSPITAL_INFO.foundingYear),
+      sameAs: [HOSPITAL_INFO.instagramUrl],
     },
     ...DOCTORS.map((doctor, index) => ({
       '@type': 'Physician',

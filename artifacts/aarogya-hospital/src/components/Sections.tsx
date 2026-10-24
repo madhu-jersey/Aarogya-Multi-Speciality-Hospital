@@ -1,28 +1,29 @@
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { Activity, Ambulance, ArrowUpRight, BriefcaseMedical, Check, Clock3, FlaskConical, HeartPulse, Pill, Plus, SquarePen, Stethoscope, Syringe, Truck, UsersRound } from 'lucide-react';
-import { ADDRESS, DIRECTIONS, GOOGLE_REVIEWS, Icon, magneticPointerLeave, magneticPointerMove, PHONE, TEL } from './common';
+import { Activity, Ambulance, ArrowUpRight, BriefcaseMedical, Building2, Check, Clock3, FlaskConical, HeartPulse, Pill, Plus, Quote, Sprout, SquarePen, Stethoscope, Syringe, TrendingUp, Truck, UsersRound } from 'lucide-react';
+import { DIRECTIONS, GOOGLE_REVIEWS, Icon, magneticPointerLeave, magneticPointerMove, PHONE, TEL } from './common';
 import { ClinicHours } from './Hero';
-import { DOCTORS, FAQ_ITEMS, HOSPITAL_INFO, HOSPITAL_MAP_EMBED } from '@/lib/hospital';
+import { DOCTORS, HOSPITAL_INFO, HOSPITAL_MAP_EMBED } from '@/lib/hospital';
+import { useLanguage } from '@/lib/i18n';
 
 const reviews = [
   {
     author: 'venkateswararao pulagam',
-    time: '6 months ago',
+    lang: 'en',
     copy: 'Had a very good experience at a hospital in Tanuku. The staff were extremely supportive, and I would especially like to appreciate Nurse Revathi for her kindness and polite behavior. She took great care of my sister after her laparoscopic operation and made us feel comfortable throughout. She truly deserves recognition for her patience and dedication. Special thanks to the doctor as well for providing the best treatment and ensuring a smooth recovery. Thank you so much for your excellent care',
   },
   {
     author: 'Chaitanya Dimple',
-    time: '4 months ago',
+    lang: 'te-Latn',
     copy: 'Hospital chala ante chala clean ga undhi, staff chala care tisukunnaru. Doctors chala friendly..motham hospital ki, doctor ki ,staff ki service mothaniki 100 ki 500 marks. Motham last lo bill yekkuva avuthundhi yemo entha bavundhi kadha anukunnam,but chala thakkuva bill tho chala baga chusukunnaru. Midnight lo emergency ga join ayam..aa time lo doctors vachi full care tisukunnaru sontha vallani chusukunnatlu..chala nacchindhi. Tanuku lo elanti hospital ledhu.',
   },
   {
     author: 'PURNA K',
-    time: '4 months ago',
+    lang: 'en',
     copy: 'The hospital facilities are very clean and well maintained good receiving doctors also very friendly especially samrin madam she is very good with patients well explained everything\nLow cost billing with higher quality treatment\nThank you arogya multi speciality hospital everyone.',
   },
   {
     author: 'Kayala Akhil',
-    time: '3 months ago',
+    lang: 'en',
     copy: 'Very Best Hospital in Tanuku..Its look like A corporate hospital but prices are low..Pulmonology department Dr Rk Naidu Fruendly Doctor',
   },
 ];
@@ -41,63 +42,111 @@ function Heading({ eyebrow, children, subline }: { eyebrow?: string; children: R
   );
 }
 
+function TitleText({ title }: { title: [string, string, string] }) {
+  return <>{title[0]}<em>{title[1]}</em>{title[2]}</>;
+}
+
 export function About() {
-  const features = [
-    { icon: <Activity className="icon" />, label: 'Pulmonology and general medicine' },
-    { icon: <BriefcaseMedical className="icon" />, label: 'Surgery and urology' },
-    { icon: <HeartPulse className="icon" />, label: "Women's and emergency care" },
-    { icon: <FlaskConical className="icon" />, label: 'Laboratory, pharmacy, and ICU' },
-  ];
+  const { t } = useLanguage();
+  const featureIcons = [Activity, BriefcaseMedical, HeartPulse, FlaskConical];
   return (
     <section className="section about-section" id="about">
       <div className="container">
         <div className="about-intro">
-          <Heading>About <em>Aarogya</em> Multi Speciality Hospital</Heading>
+          <Heading><TitleText title={t.about.title} /></Heading>
           <Reveal>
-            <p>{HOSPITAL_INFO.name} in {HOSPITAL_INFO.locality}, near {HOSPITAL_INFO.nearbyCity}, offers corporate-level medical services for everyone, with specialist doctors across pulmonology, general medicine, surgery, urology, and gynaecology, and 24x7 emergency care.</p>
+            <p>{t.about.body}</p>
           </Reveal>
         </div>
         <div className="feature-grid">
-          {features.map((feature, index) => (
-            <Reveal key={feature.label}>
-              <article className="feature-tile" style={{ transitionDelay: `${index * 90}ms` }}>
-                {feature.icon}
-                <strong>{feature.label}</strong>
+          {featureIcons.map((FeatureIcon, index) => (
+            <Reveal key={index}>
+              <article className="feature-tile">
+                <FeatureIcon className="icon" />
+                <strong>{t.about.features[index]}</strong>
               </article>
             </Reveal>
           ))}
         </div>
-        <Reveal><a className="button button-outline" href="#doctors"><span>Meet our doctors</span><Icon name="arrow" /></a></Reveal>
+        <Reveal><a className="button button-outline" href="#doctors"><span>{t.about.meetDoctors}</span><Icon name="arrow" /></a></Reveal>
+      </div>
+    </section>
+  );
+}
+
+export function OurStory() {
+  const { t } = useLanguage();
+  const founded = HOSPITAL_INFO.foundingYear;
+  const currentYear = new Date().getFullYear();
+  const years = currentYear - founded;
+  const milestoneIcons = [Sprout, TrendingUp, Building2];
+  const milestoneYears = [founded, founded, currentYear];
+  const stats = [
+    { value: String(founded), label: t.story.stats.established },
+    { value: `${years}`, label: t.story.stats.years(years) },
+    { value: String(DOCTORS.length), label: t.story.stats.doctors },
+    { value: '4.9★', label: t.story.stats.rating },
+  ];
+  return (
+    <section className="section story-section" id="our-story">
+      <div className="container story-grid">
+        <div className="story-copy">
+          <p className="section-label reveal">{t.story.label}</p>
+          <Reveal><h2><TitleText title={t.story.title} /></h2></Reveal>
+          <Reveal>
+            <p className="story-lead">{t.story.lead(founded)}</p>
+          </Reveal>
+          <Reveal>
+            <p>{t.story.body(years)}</p>
+          </Reveal>
+          <Reveal>
+            <figure className="story-quote">
+              <Quote aria-hidden="true" />
+              <blockquote lang={t.story.quoteLang}>{t.story.quote}</blockquote>
+              <figcaption>{t.story.quoteTranslation && <span>{t.story.quoteTranslation}</span>}{t.story.quoteSource}</figcaption>
+            </figure>
+          </Reveal>
+        </div>
+        <div className="story-side">
+          <ol className="story-timeline">
+            {t.story.milestones.map((milestone, index) => {
+              const MilestoneIcon = milestoneIcons[index];
+              return (
+                <li className="story-step reveal" key={index}>
+                  <span className="story-node"><MilestoneIcon aria-hidden="true" /></span>
+                  <p className="story-when">{milestone.when(milestoneYears[index])}</p>
+                  <h3>{milestone.title}</h3>
+                  <p>{milestone.copy}</p>
+                </li>
+              );
+            })}
+          </ol>
+          <dl className="story-stats reveal">
+            {stats.map((stat, index) => (
+              <div key={index}>
+                <dt>{stat.label}</dt>
+                <dd>{stat.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </section>
   );
 }
 
 export function Services() {
-  const cards = [
-    {
-      icon: <Stethoscope className="icon" />,
-      title: 'Medical and surgical care',
-      services: ['Pulmonology', 'Rheumatology', 'Urology', 'General medicine', 'General surgery (laparoscopic)'],
-    },
-    {
-      icon: <HeartPulse className="icon" />,
-      title: "Women's and emergency care",
-      services: ['Gynaecology and obstetric care', '24x7 emergency services', 'Poison cases, snake bite cases, and accident cases'],
-    },
-    {
-      icon: <Syringe className="icon" />,
-      title: 'Facilities and support',
-      services: ['Laparoscopic surgery', '2D Echo', 'Ventilator facility', 'Advanced operation theatres', 'ICU, laboratory, and pharmacy', 'Visiting services', 'Duty doctor available at night'],
-    },
-  ];
+  const { t } = useLanguage();
+  const cardIcons = [Stethoscope, HeartPulse, Syringe];
   return (
     <section className="section services-section" id="services">
       <div className="container">
-        <Heading subline="Specialist care across medical, surgical, and emergency services.">Our <em>services</em></Heading>
+        <Heading subline={t.services.subline}><TitleText title={t.services.title} /></Heading>
         <div className="services-grid">
-          {cards.map((card, cardIndex) => (
-            <article className="service-card reveal" key={card.title} style={{ transitionDelay: `${cardIndex * 150}ms` }}
+          {t.services.cards.map((card, cardIndex) => {
+            const CardIcon = cardIcons[cardIndex];
+            return (
+            <article className="service-card reveal" key={cardIndex}
               onPointerMove={(event) => {
                 if (event.pointerType === 'touch' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
                 const bounds = event.currentTarget.getBoundingClientRect();
@@ -108,14 +157,15 @@ export function Services() {
                 event.currentTarget.style.transform = `perspective(900px) rotateX(${-y * 8}deg) rotateY(${x * 8}deg) translateY(-6px)`;
               }}
               onPointerLeave={(event) => { event.currentTarget.style.transform = ''; }}>
-              <div className="service-icon-well">{card.icon}</div>
+              <div className="service-icon-well"><CardIcon className="icon" /></div>
               <h3>{card.title}</h3>
               <ul className="service-list">
-                {card.services.map((service) => <li key={service}><Check className="icon" />{service}</li>)}
+                {card.services.map((service, index) => <li key={index}><Check className="icon" />{service}</li>)}
               </ul>
               <ArrowUpRight className="icon service-arrow" />
             </article>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -123,6 +173,7 @@ export function Services() {
 }
 
 export function Doctors() {
+  const { t } = useLanguage();
   const doctorPhotos: Record<string, string> = {
     RK: '/assets/doctors/dr-r-k-naidu-puppala.png',
     SV: '/assets/doctors/dr-s-visweswara-reddy.png',
@@ -133,11 +184,12 @@ export function Doctors() {
   return (
     <section className="section doctors-section" id="doctors">
       <div className="container">
-        <Heading subline="Specialist doctors at Aarogya Multi Speciality Hospital.">Our <em>doctors</em></Heading>
+        <Heading subline={t.doctors.subline}><TitleText title={t.doctors.title} /></Heading>
         <div className="doctors-grid">
         {DOCTORS.map((doctor, index) => {
             const imageOnLeft = index % 2 === 0;
             const photo = doctorPhotos[doctor.initials];
+            const text = t.doctors.list[doctor.initials];
             return (
             <article
               className={`doctor-card reveal doctor-card--image-${imageOnLeft ? 'left' : 'right'}`}
@@ -149,25 +201,25 @@ export function Doctors() {
                   <img
                     className="doctor-photo"
                     src={photo}
-                    alt={`${doctor.name}, ${doctor.department}, Aarogya Multi Speciality Hospital`}
+                    alt={t.doctors.photoAlt(text.name, text.department)}
                     loading="lazy"
                     decoding="async"
                     width="1152"
                     height="768"
                   />
                 ) : (
-                  <span className="doctor-monogram" role="img" aria-label={`Monogram for ${doctor.name}`}>{doctor.initials}</span>
+                  <span className="doctor-monogram" role="img" aria-label={text.name}>{doctor.initials}</span>
                 )}
               </div>
               <div className="doctor-details">
-                <p className="doctor-specialty">{doctor.department}</p>
-                <h3>{doctor.name}</h3>
-                <p className="doctor-credentials">{doctor.degree}</p>
+                <p className="doctor-specialty">{text.department}</p>
+                <h3>{text.name}</h3>
+                <p className="doctor-credentials" lang="en">{doctor.degree}</p>
                 <hr className="doctor-divider" />
-                <h4>Areas of care</h4>
-                <p className="doctor-care"><Check aria-hidden="true" />{doctor.care}</p>
-                <div className="doctor-availability" aria-label="Doctor timings">
-                  {doctor.timings.map((timing) => <span className="doctor-time-slot" key={timing}><Clock3 aria-hidden="true" />{timing}</span>)}
+                <h4>{t.doctors.areasOfCare}</h4>
+                <p className="doctor-care"><Check aria-hidden="true" />{text.care}</p>
+                <div className="doctor-availability" aria-label={t.doctors.timingsAria}>
+                  {text.timings.map((timing, slot) => <span className="doctor-time-slot" key={slot}><Clock3 aria-hidden="true" />{timing}</span>)}
                 </div>
                 <a
                   className="button doctor-book"
@@ -184,7 +236,7 @@ export function Doctors() {
                     event.currentTarget.style.setProperty('--magnet-x', '0px');
                     event.currentTarget.style.setProperty('--magnet-y', '0px');
                   }}
-                >Call to book</a>
+                >{t.doctors.callToBook}</a>
               </div>
             </article>
             );
@@ -196,24 +248,23 @@ export function Doctors() {
 }
 
 export function WhyChooseUs() {
-  const reasons = [
-    { icon: <Ambulance aria-hidden="true" />, title: '24/7 emergency care', line: 'Emergency services run around the clock, with 24/7 ambulance support.' },
-    { icon: <Stethoscope aria-hidden="true" />, title: 'Specialist doctors', line: 'Pulmonology, general medicine, surgery, urology, and gynaecology under one roof.' },
-    { icon: <FlaskConical aria-hidden="true" />, title: 'Complete facilities', line: 'ICU and HDU, laboratory, pharmacy, and advanced operation theatres.' },
-    { icon: <UsersRound aria-hidden="true" />, title: 'Care for everyone', line: 'Corporate-level medical services for everyone in Sajjapuram.' },
-  ];
+  const { t } = useLanguage();
+  const reasonIcons = [Ambulance, Stethoscope, FlaskConical, UsersRound];
   return (
     <section className="section why-section" id="why-choose-us">
       <div className="container">
-        <Heading subline="Corporate-level medical care for everyone, provided by specialist doctors.">Why choose <em>Aarogya</em></Heading>
+        <Heading subline={t.why.subline}><TitleText title={t.why.title} /></Heading>
         <div className="why-grid">
-          {reasons.map((reason, index) => (
-            <article className="why-card reveal" key={reason.title} style={{ '--item-delay': `${index * 100}ms` } as CSSProperties}>
-              <span className="why-icon">{reason.icon}</span>
+          {t.why.reasons.map((reason, index) => {
+            const ReasonIcon = reasonIcons[index];
+            return (
+            <article className="why-card reveal" key={index}>
+              <span className="why-icon"><ReasonIcon aria-hidden="true" /></span>
               <h3>{reason.title}</h3>
               <p>{reason.line}</p>
             </article>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -221,18 +272,19 @@ export function WhyChooseUs() {
 }
 
 export function FAQ() {
+  const { t } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   return (
     <section className="section faq-section" id="faq">
       <div className="container faq-container">
-        <Heading>Frequently <em>asked</em> questions</Heading>
+        <Heading><TitleText title={t.faq.title} /></Heading>
         <div className="faq-list">
-          {FAQ_ITEMS.map((item, index) => {
+          {t.faq.items.map((item, index) => {
             const isOpen = openIndex === index;
             const triggerId = `faq-trigger-${index}`;
             const panelId = `faq-panel-${index}`;
             return (
-              <article className="faq-item reveal" key={item.question} style={{ '--item-delay': `${index * 80}ms` } as CSSProperties}>
+              <article className="faq-item reveal" key={index}>
                 <h3>
                   <button id={triggerId} className="faq-trigger" type="button" aria-expanded={isOpen} aria-controls={panelId} onClick={() => setOpenIndex(isOpen ? null : index)}>
                     <span>{item.question}</span>
@@ -296,6 +348,7 @@ function getLightboxSize(width: number, height: number) {
 }
 
 export function HospitalGallery() {
+  const { t } = useLanguage();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null);
@@ -455,15 +508,14 @@ export function HospitalGallery() {
   return (
     <section className="section gallery-section" id="gallery">
       <div className="container">
-        <Heading subline="A look at our hospital.">Inside <em>Aarogya</em></Heading>
+        <Heading subline={t.gallery.subline}><TitleText title={t.gallery.title} /></Heading>
         <div className="gallery-grid">
           {galleryPhotos.map((photo, index) => (
             <button
               className={`gallery-tile gallery-tile-${index + 1} reveal`}
               type="button"
               key={photo.src}
-              style={{ transitionDelay: `${index * 90}ms` }}
-              aria-label={`Open ${photo.caption} photo`}
+              aria-label={t.gallery.open(t.gallery.captions[index])}
               onClick={(event) => {
                 opener.current = event.currentTarget;
                 clearSwitch();
@@ -474,9 +526,9 @@ export function HospitalGallery() {
             >
               <picture>
                 <source type="image/webp" srcSet={photo.srcSet} sizes={index === 0 ? '(max-width: 767px) 100vw, 50vw' : '(max-width: 767px) 50vw, 24vw'} />
-                <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" width={photo.width} height={photo.height} />
+                <img src={photo.src} alt={t.gallery.alt(t.gallery.captions[index])} loading="lazy" decoding="async" width={photo.width} height={photo.height} />
               </picture>
-              <span className="gallery-caption">{photo.caption}</span>
+              <span className="gallery-caption">{t.gallery.captions[index]}</span>
             </button>
           ))}
         </div>
@@ -487,7 +539,7 @@ export function HospitalGallery() {
           ref={dialog}
           role="dialog"
           aria-modal="true"
-          aria-label="Hospital gallery"
+          aria-label={t.gallery.dialog}
           onClick={(event) => { if (event.target === event.currentTarget) closeLightbox(); }}
           onTouchStart={(event) => { touchStart.current = event.changedTouches[0]?.clientX ?? null; }}
           onTouchEnd={(event) => {
@@ -496,7 +548,7 @@ export function HospitalGallery() {
             touchStart.current = null;
           }}
         >
-            <button className="gallery-arrow gallery-arrow-prev" type="button" aria-label="Previous photo" onClick={() => movePhoto(-1)}>‹</button>
+            <button className="gallery-arrow gallery-arrow-prev" type="button" aria-label={t.gallery.previous} onClick={() => movePhoto(-1)}>‹</button>
             <div
               className={`gallery-lightbox-image${isCrossfading ? ' is-crossfading' : ''}`}
               style={frameSize ? { width: `${frameSize.width}px`, height: `${frameSize.height}px` } : undefined}
@@ -508,14 +560,14 @@ export function HospitalGallery() {
                 return (
                   <picture className={`gallery-lightbox-photo${isIncoming ? ' is-incoming' : ' is-outgoing'}`} key={photo.src}>
                     <source type="image/webp" srcSet={photo.srcSet} sizes={gallerySizes} />
-                    <img ref={isIncoming ? incomingImage : undefined} src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} />
+                    <img ref={isIncoming ? incomingImage : undefined} src={photo.src} alt={t.gallery.alt(t.gallery.captions[index])} width={photo.width} height={photo.height} />
                   </picture>
                 );
               })}
-              <span className="gallery-lightbox-caption">{galleryPhotos[pendingIndex ?? activeIndex].caption}</span>
-              <button className="gallery-close" ref={closeButton} type="button" aria-label="Close gallery" onClick={closeLightbox}>×</button>
+              <span className="gallery-lightbox-caption">{t.gallery.captions[pendingIndex ?? activeIndex]}</span>
+              <button className="gallery-close" ref={closeButton} type="button" aria-label={t.gallery.close} onClick={closeLightbox}>×</button>
             </div>
-            <button className="gallery-arrow gallery-arrow-next" type="button" aria-label="Next photo" onClick={() => movePhoto(1)}>›</button>
+            <button className="gallery-arrow gallery-arrow-next" type="button" aria-label={t.gallery.next} onClick={() => movePhoto(1)}>›</button>
         </div>
       )}
     </section>
@@ -523,17 +575,18 @@ export function HospitalGallery() {
 }
 
 export function Reviews() {
+  const { t } = useLanguage();
   return (
     <section className="section reviews-section" id="reviews">
       <div className="container">
-        <Heading subline="Read more reviews on Google.">What patients <em>say</em></Heading>
+        <Heading subline={t.reviews.subline}><TitleText title={t.reviews.title} /></Heading>
         <div className="reviews-layout">
         <Reveal className="reviews-summary-reveal">
-          <div className="reviews-summary" aria-label="Google rating: 4.9 out of 5 from 114 reviews">
+          <div className="reviews-summary" aria-label={t.reviews.summaryAria}>
             <div className="reviews-score">
               <strong>4.9</strong>
-              <span className="rating-stars" aria-label="5 out of 5 stars">★★★★★</span>
-              <span className="rating-count">114 reviews</span>
+              <span className="rating-stars" aria-label={t.reviews.starsAria}>★★★★★</span>
+              <span className="rating-count">{t.reviews.count}</span>
             </div>
             <div className="reviews-breakdown" aria-hidden="true">
               {[['5', '100%'], ['4', '7%'], ['3', '1%'], ['2', '1%'], ['1', '3%']].map(([rating, fill], index) => (
@@ -545,24 +598,25 @@ export function Reviews() {
             </div>
             <a className="write-review-button" href={GOOGLE_REVIEWS} target="_blank" rel="noopener noreferrer">
               <SquarePen aria-hidden="true" />
-              <span>Write a review</span>
+              <span>{t.reviews.write}</span>
             </a>
           </div>
         </Reveal>
         <div className="reviews-grid">
-          {reviews.map((review) => (
+          {reviews.map((review, index) => (
             <article className="review-card reveal" key={review.author}>
-              <div className="stars" aria-label="Five stars">
+              <div className="stars" aria-label={t.reviews.cardStarsAria}>
                 {[0, 1, 2, 3, 4].map((star) => <span className="star" key={star} aria-hidden="true">★</span>)}
               </div>
-              <p className="review-copy">{review.copy}</p>
-              <div className="review-author"><span>{review.author}</span><time>{review.time}</time></div>
+              {/* Patients' own words stay exactly as they wrote them. */}
+              <p className="review-copy" lang={review.lang}>{review.copy}</p>
+              <div className="review-author"><span>{review.author}</span><time>{t.reviews.times[index]}</time></div>
             </article>
           ))}
         </div>
         <Reveal className="review-cta">
           <a className="button button-outline" href={GOOGLE_REVIEWS} target="_blank" rel="noopener noreferrer">
-            <span>Read more reviews on Google</span><Icon name="external" />
+            <span>{t.reviews.readMore}</span><Icon name="external" />
           </a>
         </Reveal>
         </div>
@@ -572,23 +626,19 @@ export function Reviews() {
 }
 
 export function Facilities() {
-  const items = [
-    { icon: <Truck className="icon" />, label: '24/7 ambulance' },
-    { icon: <FlaskConical className="icon" />, label: 'Laboratory services' },
-    { icon: <Pill className="icon" />, label: 'Pharmacy' },
-    { icon: <HeartPulse className="icon" />, label: 'ICU and HDU' },
-    { icon: <Syringe className="icon" />, label: 'Advanced operation theatres' },
-  ];
+  const { t } = useLanguage();
+  const facilityIcons = [Truck, FlaskConical, Pill, HeartPulse, Syringe];
   return (
-    <section className="facilities-band" aria-label="Hospital facilities">
+    <section className="facilities-band" aria-label={t.facilities.aria}>
       <div className="container facilities-grid">
-        {items.map((item, index) => <div className="facility-item reveal" key={item.label} style={{ transitionDelay: `${index * 90}ms` }}>{item.icon}<span>{item.label}</span></div>)}
+        {facilityIcons.map((FacilityIcon, index) => <div className="facility-item reveal" key={index}><FacilityIcon className="icon" /><span>{t.facilities.items[index]}</span></div>)}
       </div>
     </section>
   );
 }
 
 export function Visit() {
+  const { t } = useLanguage();
   const [mapActive, setMapActive] = useState(false);
   return (
     <section className="section visit-section" id="visit">
@@ -596,30 +646,37 @@ export function Visit() {
         <div className="visit-grid">
           <div className="visit-copy">
             <div className="reveal">
-              <p className="section-label">Visit us</p>
-              <h2 className="visit-heading">We're here when <em>you need us.</em></h2>
-              <p className="visit-subline">Plan your visit or call the hospital for assistance.</p>
+              <p className="section-label">{t.visit.label}</p>
+              <h2 className="visit-heading"><TitleText title={t.visit.title} /></h2>
+              <p className="visit-subline">{t.visit.subline}</p>
             </div>
             <p className="address-block reveal">
-              <strong>{ADDRESS}</strong>
-              <span>Sajjapuram, Andhra Pradesh 534211</span>
+              <strong>{t.visit.address}</strong>
+              <span>{t.visit.addressLine}</span>
             </p>
             <div className="reveal">
               <a className="phone-primary button magnetic" href={TEL} onPointerMove={magneticPointerMove} onPointerLeave={magneticPointerLeave}>{PHONE}</a>
               <div className="other-phones">
-                <a href="tel:+919966193444">+91 99661 93444</a>
-                <a href="tel:+918374972243">+91 83749 72243</a>
-              </div>
+                <a href="tel:+919966193444">+91 99661 93444</a>              </div>
             </div>
             <ClinicHours className="visit-hours reveal" />
-            <a className="visit-emergency reveal magnetic" href={TEL} onPointerMove={magneticPointerMove} onPointerLeave={magneticPointerLeave}>24x7 emergency services</a>
+            <a className="visit-emergency reveal magnetic" href={TEL} onPointerMove={magneticPointerMove} onPointerLeave={magneticPointerLeave}>{t.visit.emergency}</a>
+            <a className="instagram-card reveal" href={HOSPITAL_INFO.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label={t.instagram.aria}>
+              <span className="instagram-card-icon"><Icon name="instagram" /></span>
+              <span className="instagram-card-copy">
+                <strong>{t.instagram.follow}</strong>
+                <span>{t.instagram.blurb}</span>
+                <span className="instagram-card-handle">{HOSPITAL_INFO.instagramHandle}</span>
+              </span>
+              <Icon name="external" className="instagram-card-arrow" />
+            </a>
           </div>
           <div>
             <div className="map-card reveal" onClick={() => setMapActive(true)} onPointerLeave={() => setMapActive(false)}>
               <div className="map-shimmer" />
-              <a className="button button-small map-directions" href={DIRECTIONS} target="_blank" rel="noopener noreferrer">Go to location</a>
+              <a className="button button-small map-directions" href={DIRECTIONS} target="_blank" rel="noopener noreferrer">{t.visit.goToLocation}</a>
               <iframe
-                title="Aarogya Multi Speciality Hospital, Sajjapuram"
+                title={t.visit.mapTitle}
                 src={HOSPITAL_MAP_EMBED}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -628,8 +685,8 @@ export function Visit() {
               />
             </div>
             <div className="map-controls">
-              <a className="button" href={TEL}>Call now</a>
-              <a className="button button-outline" href={DIRECTIONS} target="_blank" rel="noopener noreferrer"><span>Get directions</span><Icon name="pin" /></a>
+              <a className="button" href={TEL}>{t.visit.callNow}</a>
+              <a className="button button-outline" href={DIRECTIONS} target="_blank" rel="noopener noreferrer"><span>{t.visit.directions}</span><Icon name="pin" /></a>
             </div>
           </div>
         </div>

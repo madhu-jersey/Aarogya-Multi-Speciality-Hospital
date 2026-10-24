@@ -1,8 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
 import { HOSPITAL, PHONE, TEL } from '@/components/common';
+import { useLanguage } from '@/lib/i18n';
 
 export default function NotFound() {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md mx-4">
@@ -15,11 +17,11 @@ export default function NotFound() {
           </div>
 
           <p className="mt-4 text-sm text-gray-600">
-            404 Page Not Found
+            {t.notFound.message}
           </p>
           <div className="mt-6 flex flex-col gap-3 text-sm">
-            <a className="font-semibold text-pink-800 underline" href="/">Return to the home page</a>
-            <a className="font-semibold text-pink-800 underline" href={TEL}>Emergency contact: {PHONE}</a>
+            <a className="font-semibold text-pink-800 underline" href="/">{t.notFound.home}</a>
+            <a className="font-semibold text-pink-800 underline" href={TEL}>{t.notFound.emergency(PHONE)}</a>
           </div>
         </CardContent>
       </Card>
