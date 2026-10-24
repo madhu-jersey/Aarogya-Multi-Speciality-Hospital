@@ -1483,8 +1483,8 @@ main, footer, .nav { transition: opacity 180ms ease; }
   .lang-toggle-thumb { top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); }
   .lang-toggle button { min-width: 34px; padding: 0 6px; font-size: 12px; }
   .lang-toggle button[lang="te"] { font-size: 14px; }
-  .header-lang { margin-left: auto; }
-  .header-call { margin-left: 0; }
+  .header-lang { display: none; }
+  .header-call { margin-left: auto; }
   .instagram-card { gap: 14px; padding: 16px; }
   .instagram-card-icon { width: 46px; height: 46px; border-radius: 14px; }
 }
@@ -1517,10 +1517,6 @@ main, footer, .nav { transition: opacity 180ms ease; }
 
 @media (prefers-reduced-motion: reduce) {
   .lang-toggle-thumb, .lang-toggle button, main, footer, .nav { transition: none !important; }
-}
-@media (max-width: 479px) {
-  .brand-telugu { display: none; }
-  .brand-name { font-size: 12px; line-height: 1.3; }
 }
 
 .doctor-photo-picture { display: contents; }
