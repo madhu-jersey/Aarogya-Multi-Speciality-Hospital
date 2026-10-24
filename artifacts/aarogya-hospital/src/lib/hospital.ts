@@ -1,5 +1,6 @@
 export const HOSPITAL_INFO = {
-  // Live domain. If a custom domain is added later, change it here; canonical, robots, sitemap, and structured data follow.
+  // Temporary Vercel domain. When the purchased domain is connected, set it here and set noindex to false;
+  // canonical, robots.txt, sitemap, and structured data all follow these two values.
   siteDomain: 'aarogya-multi-speciality-hospital.vercel.app',
   facebookUrl: 'https://www.facebook.com/share/1BubDwUVjT/',
   instagramUrl: 'https://www.instagram.com/aarogyamultyspecialtyhospital/',
@@ -7,7 +8,8 @@ export const HOSPITAL_INFO = {
   // Google Maps listing (CID) for this hospital, used to link the site to its Google Business Profile.
   googleMapsUrl: 'https://www.google.com/maps?cid=7150611576903896105',
   alternatePhone: '+919966193444',
-  noindex: false,
+  // Hidden from search engines until the purchased domain is live.
+  noindex: true,
   name: 'Aarogya Multi Speciality Hospital',
   foundingYear: 2021,
   teluguName: 'ఆరోగ్య మల్టీ స్పెషాలిటీ హాస్పిటల్',
