@@ -1522,3 +1522,39 @@ main, footer, .nav { transition: opacity 180ms ease; }
   .brand-telugu { display: none; }
   .brand-name { font-size: 12px; line-height: 1.3; }
 }
+
+.doctor-photo-picture { display: contents; }
+
+/* ==========================================================================
+   Phone and tablet performance
+   Touch scrolling stays on the GPU: no blur filters, no backdrop blur, no
+   clip-path wipes, and no endless decorative loops. Desktop keeps the full set.
+   ========================================================================== */
+@media (max-width: 767px), (hover: none) and (pointer: coarse) {
+  /* Reveals: opacity and translate only, both GPU-composited. */
+  .has-reveal-observer .reveal.is-visible:not(.doctor-card) { animation-name: revealLite !important; animation-duration: 750ms !important; }
+
+  /* Photos settle in from a slight zoom instead of a clip-path wipe. */
+  .has-reveal-observer .gallery-tile:not(.is-visible) > picture,
+  .has-reveal-observer .doctor-card:not(.is-visible) .doctor-photo { clip-path: none; }
+  .gallery-tile.is-visible > picture { animation: none; }
+  .doctor-card.is-visible .doctor-photo { animation: imageSettle 1100ms var(--ease-premium) calc(var(--card-delay, 0ms) + 120ms) both; }
+
+  /* Solid surfaces instead of live backdrop blur behind moving content. */
+  .header.scrolled { background: rgba(255,255,255,.97); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .mobile-panel { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .hero .hours-card { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .gallery-lightbox { background: rgba(24,13,21,.95); -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+  /* Endless loops off; several of these repaint every frame. */
+  .hero-photo, .hero-image-motion, .hero-photo:after, .hero-pill i, .header-call:after,
+  .doctors-section .doctor-portrait:before, .doctors-section .doctor-monogram,
+  .visit-section .visit-hours:after, .visit-section .visit-emergency:after, .map-shimmer { animation: none !important; }
+  .hero-photo { will-change: auto; }
+  .map-shimmer { background: #F6EAF1; }
+}
+
+@keyframes revealLite {
+  from { opacity: 0; translate: 0 var(--reveal-y); }
+  to { opacity: 1; translate: 0 0; }
+}

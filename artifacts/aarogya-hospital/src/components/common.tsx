@@ -75,12 +75,14 @@ export function Header() {
 
   useEffect(() => {
     let frame = 0;
+    const line = document.querySelector<HTMLElement>('.top-progress');
+    // One read and one write per frame; skip frames already queued.
     const onScroll = () => {
-      cancelAnimationFrame(frame);
+      if (frame) return;
       frame = requestAnimationFrame(() => {
+        frame = 0;
         const max = document.documentElement.scrollHeight - window.innerHeight;
         const progress = max > 0 ? window.scrollY / max : 0;
-        const line = document.querySelector<HTMLElement>('.top-progress');
         if (line) line.style.transform = `scaleX(${progress})`;
         setScrolled(window.scrollY > 40);
       });
