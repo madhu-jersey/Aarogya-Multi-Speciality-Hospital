@@ -12,8 +12,16 @@ function isLang(value: unknown): value is Lang {
   return value === 'en' || value === 'te';
 }
 
+// Phones have no language switch, so they always show English and can never get stuck in Telugu.
+const PHONE_QUERY = '(max-width: 767px)';
+
+function isPhone() {
+  return window.matchMedia(PHONE_QUERY).matches;
+}
+
 // A ?lang=te link (for example from Instagram) wins over the saved choice.
 function initialLang(): Lang {
+  if (isPhone()) return 'en';
   try {
     const fromUrl = new URLSearchParams(window.location.search).get('lang');
     if (isLang(fromUrl)) return fromUrl;
@@ -33,12 +41,22 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     const root = document.documentElement;
     root.lang = lang;
     root.classList.toggle('lang-te', lang === 'te');
+    // Only a real choice is saved; the forced English on phones must not overwrite it.
+    if (isPhone()) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, lang);
     } catch {
       // Ignore: the choice simply will not persist.
     }
   }, [lang]);
+
+  // Narrowing a window to phone width drops back to English, since the toggle disappears there.
+  useEffect(() => {
+    const query = window.matchMedia(PHONE_QUERY);
+    const onChange = () => { if (query.matches) setLangState('en'); };
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
 
   useEffect(() => () => {
     if (fadeTimer.current !== null) window.clearTimeout(fadeTimer.current);
