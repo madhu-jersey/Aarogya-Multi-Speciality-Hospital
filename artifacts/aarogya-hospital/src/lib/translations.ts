@@ -36,7 +36,7 @@ const en = {
     mobileNav: 'Mobile navigation',
   },
   hero: {
-    pill: `${HOSPITAL_INFO.name} · ${HOSPITAL_INFO.locality}`,
+    pill: `${HOSPITAL_INFO.name} · ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}`,
     titleLines: ['Multi Speciality', 'Hospital'],
     otherName: TELUGU_NAME,
     otherNameLang: 'te',
@@ -99,7 +99,7 @@ const en = {
   },
   services: {
     title: ['Our ', 'services', ''] as Title,
-    subline: 'Specialist care across medical, surgical, and emergency services.',
+    subline: "Specialist care in Tanuku across medical, surgical, women's, and emergency services.",
     cards: [
       {
         title: 'Medical and surgical care',
@@ -117,11 +117,11 @@ const en = {
   },
   doctors: {
     title: ['Our ', 'doctors', ''] as Title,
-    subline: `Specialist doctors at ${HOSPITAL_INFO.name}.`,
+    subline: `Specialist doctors at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.nearbyCity}.`,
     areasOfCare: 'Areas of care',
     timingsAria: 'Doctor timings',
     callToBook: 'Call to book',
-    photoAlt: (name: string, department: string) => `${name}, ${department}, ${HOSPITAL_INFO.name}`,
+    photoAlt: (name: string, department: string) => `${name}, ${department} specialist at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.nearbyCity}`,
     list: Object.fromEntries(DOCTORS.map((doctor) => [doctor.initials, { name: doctor.name, department: doctor.department, care: doctor.care, timings: [...doctor.timings] }])) as Record<string, DoctorText>,
   },
   why: {
@@ -185,7 +185,7 @@ const en = {
     name: ENGLISH_NAME,
     otherName: TELUGU_NAME,
     otherNameLang: 'te',
-    location: 'Sajjapuram, Andhra Pradesh',
+    location: 'Sajjapuram, Tanuku, Andhra Pradesh',
     explore: 'Explore',
     connect: 'Connect',
     call: (phone: string) => `Call ${phone}`,
@@ -228,7 +228,7 @@ const te: Dictionary = {
     mobileNav: 'మొబైల్ మెనూ',
   },
   hero: {
-    pill: `${TELUGU_NAME} · సజ్జాపురం`,
+    pill: `${TELUGU_NAME} · సజ్జాపురం, తణుకు`,
     titleLines: ['మల్టీ స్పెషాలిటీ', 'హాస్పిటల్'],
     otherName: ENGLISH_NAME,
     otherNameLang: 'en',
@@ -291,7 +291,7 @@ const te: Dictionary = {
   },
   services: {
     title: ['మా ', 'సేవలు', ''],
-    subline: 'వైద్యం, శస్త్రచికిత్స మరియు అత్యవసర విభాగాల్లో నిపుణుల సేవలు.',
+    subline: 'తణుకులో వైద్యం, శస్త్రచికిత్స, మహిళల మరియు అత్యవసర విభాగాల్లో నిపుణుల సేవలు.',
     cards: [
       {
         title: 'వైద్యం మరియు శస్త్రచికిత్సలు',
@@ -329,7 +329,7 @@ const te: Dictionary = {
   },
   doctors: {
     title: ['మా ', 'డాక్టర్లు', ''],
-    subline: `${TELUGU_NAME}లోని నిపుణులైన డాక్టర్లు.`,
+    subline: `తణుకులోని ${TELUGU_NAME}లో నిపుణులైన డాక్టర్లు.`,
     areasOfCare: 'చికిత్స అందించే విభాగాలు',
     timingsAria: 'డాక్టర్ సమయాలు',
     callToBook: 'కాల్ చేసి బుక్ చేసుకోండి',
@@ -428,7 +428,7 @@ const te: Dictionary = {
     name: TELUGU_NAME,
     otherName: ENGLISH_NAME,
     otherNameLang: 'en',
-    location: 'సజ్జాపురం, ఆంధ్రప్రదేశ్',
+    location: 'సజ్జాపురం, తణుకు, ఆంధ్రప్రదేశ్',
     explore: 'త్వరిత లింకులు',
     connect: 'సంప్రదించండి',
     call: (phone: string) => `${phone} కు కాల్ చేయండి`,

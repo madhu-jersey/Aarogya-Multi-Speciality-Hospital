@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import { copyFile, readFile } from 'node:fs/promises';
-import { HOSPITAL_INFO } from './src/lib/hospital';
+import { HOSPITAL_INFO, SEO_KEYWORDS } from './src/lib/hospital';
+import { buildStructuredData } from './src/lib/seo';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
@@ -17,16 +18,29 @@ if (Number.isNaN(port) || port <= 0) {
 const basePath = process.env.BASE_PATH ?? '/';
 const domain = HOSPITAL_INFO.siteDomain;
 
+const escapeAttribute = (value: string) => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
 function crawlFilesPlugin() {
+  const buildDate = new Date().toISOString().slice(0, 10);
   const replaceDomain = (content: string) => content
     .replaceAll('YOUR-DOMAIN', domain)
+    .replaceAll('BUILD-DATE', buildDate)
     .replace('Allow: /', HOSPITAL_INFO.noindex ? 'Disallow: /' : 'Allow: /');
 
   return {
     name: 'aarogya-crawl-files',
     transformIndexHtml(html: string) {
-      const robots = HOSPITAL_INFO.noindex ? 'noindex, nofollow' : 'index, follow';
+      const robots = HOSPITAL_INFO.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1';
+      // Ship the structured data in the HTML itself; "<" is escaped so the JSON can never close the script tag.
+      const jsonLd = JSON.stringify(buildStructuredData(`https://${domain}`)).replaceAll('<', '\\u003c');
       return html
+        .replaceAll('%SEO_TITLE%', escapeAttribute(HOSPITAL_INFO.title))
+        .replaceAll('%SEO_DESCRIPTION%', escapeAttribute(HOSPITAL_INFO.description))
+        .replaceAll('%SEO_KEYWORDS%', escapeAttribute(SEO_KEYWORDS.join(', ')))
+        .replaceAll('%SEO_NAME%', escapeAttribute(HOSPITAL_INFO.name))
+        .replaceAll('%SEO_GEO_POSITION%', `${HOSPITAL_INFO.latitude};${HOSPITAL_INFO.longitude}`)
+        .replaceAll('%SEO_ICBM%', `${HOSPITAL_INFO.latitude}, ${HOSPITAL_INFO.longitude}`)
+        .replace('<!-- %SEO_JSONLD% -->', `<script id="aarogya-jsonld" type="application/ld+json">${jsonLd}</script>`)
         .replace(/<meta name="robots" content="[^"]*"\s*\/>/, `<meta name="robots" content="${robots}" />`)
         .replaceAll('https://YOUR-DOMAIN/', `https://${domain}/`);
     },

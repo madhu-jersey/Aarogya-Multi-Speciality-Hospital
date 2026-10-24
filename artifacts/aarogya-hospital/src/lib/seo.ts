@@ -1,4 +1,127 @@
-import { DOCTORS, FAQ_ITEMS, HOSPITAL_INFO } from './hospital';
+import {
+  AREAS_SERVED,
+  DOCTORS,
+  FAQ_ITEMS,
+  GALLERY_IMAGES,
+  HOSPITAL_ALTERNATE_NAMES,
+  HOSPITAL_INFO,
+  MEDICAL_SERVICES,
+  MEDICAL_SPECIALTIES,
+} from './hospital';
+
+// Pure (no DOM), so the build can bake the same JSON-LD into index.html for crawlers that skip JavaScript.
+export function buildStructuredData(origin: string) {
+  const absolute = (path: string) => new URL(path, `${origin}/`).href;
+  const homeUrl = `${origin}/`;
+  const hospitalId = `${origin}/#hospital`;
+  const address = {
+    '@type': 'PostalAddress',
+    streetAddress: HOSPITAL_INFO.address,
+    addressLocality: `${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}`,
+    addressRegion: HOSPITAL_INFO.region,
+    postalCode: HOSPITAL_INFO.postalCode,
+    addressCountry: HOSPITAL_INFO.country,
+  };
+  const geo = { '@type': 'GeoCoordinates', latitude: HOSPITAL_INFO.latitude, longitude: HOSPITAL_INFO.longitude };
+  const allDay = {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: '00:00',
+    closes: '23:59',
+  };
+  const daily = (opens: string, closes: string) => ({ ...allDay, opens, closes });
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': ['Hospital', 'MedicalOrganization'],
+        '@id': hospitalId,
+        name: HOSPITAL_INFO.name,
+        alternateName: HOSPITAL_ALTERNATE_NAMES,
+        description: `${HOSPITAL_INFO.name} is a 24x7 multi speciality hospital in ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}, offering emergency and ICU care, pulmonology, general medicine, general and laparoscopic surgery, neurosurgery, oncology, urology, rheumatology, gynaecology, pregnancy and delivery care, and infertility treatment.`,
+        slogan: 'Corporate-level medical care for everyone, provided by specialist doctors.',
+        url: homeUrl,
+        telephone: HOSPITAL_INFO.phone,
+        contactPoint: [
+          { '@type': 'ContactPoint', telephone: HOSPITAL_INFO.telephone, contactType: 'emergency', availableLanguage: ['en', 'te'], hoursAvailable: allDay },
+          { '@type': 'ContactPoint', telephone: HOSPITAL_INFO.alternatePhone, contactType: 'customer service', availableLanguage: ['en', 'te'] },
+        ],
+        address,
+        geo,
+        hasMap: HOSPITAL_INFO.googleMapsUrl,
+        areaServed: AREAS_SERVED.map((name) => ({ '@type': 'Place', name })),
+        logo: absolute(HOSPITAL_INFO.logo),
+        image: GALLERY_IMAGES.map((image) => absolute(image.path)),
+        foundingDate: String(HOSPITAL_INFO.foundingYear),
+        openingHoursSpecification: allDay,
+        isAcceptingNewPatients: true,
+        medicalSpecialty: MEDICAL_SPECIALTIES,
+        availableService: MEDICAL_SERVICES.map((service) => ({ '@type': service.type, name: service.name })),
+        department: {
+          '@type': 'MedicalClinic',
+          '@id': `${origin}/#outpatient`,
+          name: `${HOSPITAL_INFO.name} Outpatient Department (OP)`,
+          parentOrganization: { '@id': hospitalId },
+          telephone: HOSPITAL_INFO.phone,
+          address,
+          openingHoursSpecification: [daily('09:00', '14:00'), daily('18:00', '21:00')],
+        },
+        member: DOCTORS.map((_, index) => ({ '@id': `${origin}/#physician-${index + 1}` })),
+        sameAs: [HOSPITAL_INFO.instagramUrl, HOSPITAL_INFO.facebookUrl, HOSPITAL_INFO.googleMapsUrl],
+      },
+      ...DOCTORS.map((doctor, index) => ({
+        '@type': 'Physician',
+        '@id': `${origin}/#physician-${index + 1}`,
+        name: doctor.name,
+        description: `${doctor.department} specialist in ${HOSPITAL_INFO.nearbyCity}: ${doctor.care}`,
+        medicalSpecialty: { '@id': doctor.medicalSpecialty },
+        image: absolute(`${doctor.photo}-800.webp`),
+        telephone: HOSPITAL_INFO.phone,
+        address,
+        geo,
+        url: `${origin}/#doctors`,
+        worksFor: { '@id': hospitalId },
+        hospitalAffiliation: { '@id': hospitalId },
+        hasCredential: {
+          '@type': 'EducationalOccupationalCredential',
+          credentialCategory: 'Medical qualification',
+          name: doctor.degree,
+        },
+      })),
+      {
+        '@type': 'WebSite',
+        '@id': `${origin}/#website`,
+        url: homeUrl,
+        name: HOSPITAL_INFO.name,
+        alternateName: HOSPITAL_ALTERNATE_NAMES,
+        inLanguage: ['en-IN', 'te-IN'],
+        publisher: { '@id': hospitalId },
+      },
+      {
+        '@type': 'MedicalWebPage',
+        '@id': `${origin}/#webpage`,
+        url: homeUrl,
+        name: HOSPITAL_INFO.title,
+        description: HOSPITAL_INFO.description,
+        inLanguage: 'en-IN',
+        isPartOf: { '@id': `${origin}/#website` },
+        about: { '@id': hospitalId },
+        primaryImageOfPage: absolute(HOSPITAL_INFO.image),
+        specialty: MEDICAL_SPECIALTIES,
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${origin}/#faq`,
+        mainEntity: FAQ_ITEMS.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: { '@type': 'Answer', text: item.answer },
+        })),
+      },
+    ],
+  };
+}
 
 function setMeta(selector: string, attribute: 'name' | 'property', key: string, content: string) {
   let meta = document.head.querySelector<HTMLMetaElement>(selector);
@@ -23,19 +146,15 @@ function setLink(rel: string, href: string, hreflang?: string) {
 }
 
 export function updateSearchMetadata(pathname: string, configuredSiteUrl?: string) {
-  const siteOrigin = HOSPITAL_INFO.siteDomain === 'YOUR-DOMAIN'
-    ? window.location.origin
-    : `https://${HOSPITAL_INFO.siteDomain}`;
-  const origin = new URL(configuredSiteUrl || siteOrigin).origin;
+  const origin = new URL(configuredSiteUrl || `https://${HOSPITAL_INFO.siteDomain}`).origin;
   const pageUrl = new URL(pathname || '/', `${origin}/`).href;
   const isHome = pathname === '/' || pathname === '';
   const isLocal = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
-  const logoUrl = new URL(HOSPITAL_INFO.logo, `${origin}/`).href;
   const imageUrl = new URL(HOSPITAL_INFO.image, `${origin}/`).href;
 
   document.title = HOSPITAL_INFO.title;
   setMeta('meta[name="description"]', 'name', 'description', HOSPITAL_INFO.description);
-  const robotsContent = HOSPITAL_INFO.noindex || isLocal ? 'noindex, nofollow' : isHome ? 'index, follow' : 'noindex, nofollow';
+  const robotsContent = HOSPITAL_INFO.noindex || isLocal ? 'noindex, nofollow' : isHome ? 'index, follow, max-image-preview:large, max-snippet:-1' : 'noindex, nofollow';
   setMeta('meta[name="robots"]', 'name', 'robots', robotsContent);
   setMeta('meta[name="theme-color"]', 'name', 'theme-color', '#A8195F');
   setMeta('meta[property="og:title"]', 'property', 'og:title', HOSPITAL_INFO.title);
@@ -56,60 +175,10 @@ export function updateSearchMetadata(pathname: string, configuredSiteUrl?: strin
     existingSchema?.remove();
     return;
   }
-
-  const hospitalId = `${origin}/#hospital`;
-  const graph = [
-    {
-      '@type': 'Hospital',
-      '@id': hospitalId,
-      name: HOSPITAL_INFO.name,
-      alternateName: HOSPITAL_INFO.teluguName,
-      url: pageUrl,
-      telephone: HOSPITAL_INFO.phone,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: HOSPITAL_INFO.address,
-        addressLocality: HOSPITAL_INFO.locality,
-        addressRegion: HOSPITAL_INFO.region,
-        postalCode: HOSPITAL_INFO.postalCode,
-        addressCountry: HOSPITAL_INFO.country,
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: HOSPITAL_INFO.latitude,
-        longitude: HOSPITAL_INFO.longitude,
-      },
-      logo: logoUrl,
-      image: imageUrl,
-      description: '24x7 emergency services',
-      foundingDate: String(HOSPITAL_INFO.foundingYear),
-      sameAs: [HOSPITAL_INFO.instagramUrl],
-    },
-    ...DOCTORS.map((doctor, index) => ({
-      '@type': 'Physician',
-      '@id': `${origin}/#physician-${index + 1}`,
-      name: doctor.name,
-      medicalSpecialty: { '@id': doctor.medicalSpecialty },
-      worksFor: { '@id': hospitalId },
-      hasCredential: {
-        '@type': 'EducationalOccupationalCredential',
-        credentialCategory: 'Medical qualification',
-        name: doctor.degree,
-      },
-    })),
-    {
-      '@type': 'FAQPage',
-      mainEntity: FAQ_ITEMS.map((item) => ({
-        '@type': 'Question',
-        name: item.question,
-        acceptedAnswer: { '@type': 'Answer', text: item.answer },
-      })),
-    },
-  ];
-
+  // The build already ships this JSON-LD in index.html; refresh it in place rather than duplicating it.
   const script = existingSchema ?? document.createElement('script');
   script.id = 'aarogya-jsonld';
   script.type = 'application/ld+json';
-  script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+  script.textContent = JSON.stringify(buildStructuredData(origin));
   if (!existingSchema) document.head.append(script);
 }

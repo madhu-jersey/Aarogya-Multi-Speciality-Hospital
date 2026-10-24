@@ -2,23 +2,40 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Aarogya Multi Speciality Hospital | Sajjapuram</title>
-    <meta name="description" content="Aarogya Multi Speciality Hospital in Sajjapuram, near Tanuku. Specialists in pulmonology, general medicine, surgery and urology, plus 24x7 emergency care." />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- %SEO_*% placeholders are filled from src/lib/hospital.ts at build time. -->
+    <title>%SEO_TITLE%</title>
+    <meta name="description" content="%SEO_DESCRIPTION%" />
+    <meta name="keywords" content="%SEO_KEYWORDS%" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="%SEO_NAME%" />
     <meta name="theme-color" content="#A8195F" />
     <link rel="canonical" href="https://YOUR-DOMAIN/" />
     <link rel="alternate" hreflang="en-IN" href="https://YOUR-DOMAIN/" />
-    <meta property="og:title" content="Aarogya Multi Speciality Hospital | Sajjapuram" />
-    <meta property="og:description" content="Aarogya Multi Speciality Hospital in Sajjapuram, near Tanuku. Specialists in pulmonology, general medicine, surgery and urology, plus 24x7 emergency care." />
+    <link rel="alternate" hreflang="x-default" href="https://YOUR-DOMAIN/" />
+
+    <!-- Local search signals: Sajjapuram, Tanuku, Andhra Pradesh. -->
+    <meta name="geo.region" content="IN-AP" />
+    <meta name="geo.placename" content="Sajjapuram, Tanuku, Andhra Pradesh" />
+    <meta name="geo.position" content="%SEO_GEO_POSITION%" />
+    <meta name="ICBM" content="%SEO_ICBM%" />
+
+    <meta property="og:site_name" content="%SEO_NAME%" />
+    <meta property="og:title" content="%SEO_TITLE%" />
+    <meta property="og:description" content="%SEO_DESCRIPTION%" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://YOUR-DOMAIN/" />
     <meta property="og:locale" content="en_IN" />
-    <meta property="og:image" content="/assets/hero.jpg" />
+    <meta property="og:locale:alternate" content="te_IN" />
+    <meta property="og:image" content="https://YOUR-DOMAIN/assets/hero.jpg" />
+    <meta property="og:image:width" content="851" />
+    <meta property="og:image:height" content="768" />
     <meta property="og:image:alt" content="Exterior of Aarogya Multi Speciality Hospital, Sajjapuram, Tanuku, Andhra Pradesh" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Aarogya Multi Speciality Hospital | Sajjapuram" />
-    <meta name="twitter:description" content="Aarogya Multi Speciality Hospital in Sajjapuram, near Tanuku. Specialists in pulmonology, general medicine, surgery and urology, plus 24x7 emergency care." />
-    <meta name="twitter:image" content="/assets/hero.jpg" />
+    <meta name="twitter:title" content="%SEO_TITLE%" />
+    <meta name="twitter:description" content="%SEO_DESCRIPTION%" />
+    <meta name="twitter:image" content="https://YOUR-DOMAIN/assets/hero.jpg" />
+
     <link rel="icon" type="image/png" href="/assets/logo.png" />
     <link rel="apple-touch-icon" href="/assets/logo.png" />
     <link rel="preload" as="image" type="image/webp" href="/assets/hero-851.webp" imagesrcset="/assets/hero-480.webp 480w, /assets/hero-851.webp 851w" imagesizes="(max-width: 767px) 100vw, 50vw" fetchpriority="high" />
@@ -26,11 +43,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&amp;family=Noto+Sans+Telugu:wght@400;500;600;700&amp;display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&amp;family=Noto+Sans+Telugu:wght@400;500;600;700&amp;display=swap" />
-    <!-- Add the Google Search Console verification token here when provided. -->
-    <!-- Add the Google Analytics measurement ID here when provided. -->
+    <!-- Google Search Console: paste the verification meta tag here, e.g. <meta name="google-site-verification" content="..." /> -->
+    <!-- %SEO_JSONLD% -->
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>Aarogya Multi Speciality Hospital, Sajjapuram, Tanuku</h1>
+      <p>24x7 emergency and ICU, pulmonology, general medicine, general and laparoscopic surgery, neurosurgery, oncology, urology, rheumatology, gynaecology, pregnancy and delivery care, and infertility treatment. Call +91 76749 61013.</p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

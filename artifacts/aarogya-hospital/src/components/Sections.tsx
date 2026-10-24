@@ -174,13 +174,6 @@ export function Services() {
 
 export function Doctors() {
   const { t } = useLanguage();
-  // Base paths; each has -800.webp and -1152.webp versions plus the original .png fallback.
-  const doctorPhotos: Record<string, string> = {
-    RK: '/assets/doctors/dr-r-k-naidu-puppala',
-    SV: '/assets/doctors/dr-s-visweswara-reddy',
-    BK: '/assets/doctors/dr-bollineni-krishna',
-    VP: '/assets/doctors/dr-v-d-prasad-muthyala',
-  };
 
   return (
     <section className="section doctors-section" id="doctors">
@@ -189,7 +182,8 @@ export function Doctors() {
         <div className="doctors-grid">
         {DOCTORS.map((doctor, index) => {
             const imageOnLeft = index % 2 === 0;
-            const photo = doctorPhotos[doctor.initials];
+            // Base path; each photo has -800.webp and -1152.webp versions plus the original .png fallback.
+            const photo = doctor.photo;
             const text = t.doctors.list[doctor.initials];
             return (
             <article
@@ -198,22 +192,18 @@ export function Doctors() {
               style={{ '--card-delay': `${index * 120}ms` } as CSSProperties}
             >
               <div className="doctor-portrait">
-                {photo ? (
-                  <picture className="doctor-photo-picture">
-                    <source type="image/webp" srcSet={`${photo}-800.webp 800w, ${photo}-1152.webp 1152w`} sizes="(max-width: 767px) 92vw, 560px" />
-                    <img
-                      className="doctor-photo"
-                      src={`${photo}.png`}
-                      alt={t.doctors.photoAlt(text.name, text.department)}
-                      loading="lazy"
-                      decoding="async"
-                      width="1152"
-                      height="768"
-                    />
-                  </picture>
-                ) : (
-                  <span className="doctor-monogram" role="img" aria-label={text.name}>{doctor.initials}</span>
-                )}
+                <picture className="doctor-photo-picture">
+                  <source type="image/webp" srcSet={`${photo}-800.webp 800w, ${photo}-1152.webp 1152w`} sizes="(max-width: 767px) 92vw, 560px" />
+                  <img
+                    className="doctor-photo"
+                    src={`${photo}.png`}
+                    alt={t.doctors.photoAlt(text.name, text.department)}
+                    loading="lazy"
+                    decoding="async"
+                    width="1152"
+                    height="768"
+                  />
+                </picture>
               </div>
               <div className="doctor-details">
                 <p className="doctor-specialty">{text.department}</p>

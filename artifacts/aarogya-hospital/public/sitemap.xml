@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://YOUR-DOMAIN/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>BUILD-DATE</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/hero.jpg</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/gallery/hospital-exterior-1200.webp</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/gallery/hospital-exterior-dusk-1200.webp</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/gallery/consultation-room-1200.webp</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/gallery/pharmacy-1200.webp</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/gallery/reception-768.webp</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/doctors/dr-r-k-naidu-puppala-1152.webp</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/doctors/dr-s-visweswara-reddy-1152.webp</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/doctors/dr-bollineni-krishna-1152.webp</image:loc></image:image>
+    <image:image><image:loc>https://YOUR-DOMAIN/assets/doctors/dr-v-d-prasad-muthyala-1152.webp</image:loc></image:image>
   </url>
 </urlset>
