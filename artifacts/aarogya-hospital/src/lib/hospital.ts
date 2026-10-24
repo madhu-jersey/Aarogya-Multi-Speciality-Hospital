@@ -85,7 +85,6 @@ export const MEDICAL_SPECIALTIES = ['Emergency', 'PrimaryCare', 'Pulmonary', 'Rh
 export const GALLERY_IMAGES = [
   { path: '/assets/hero.jpg', caption: 'Aarogya Multi Speciality Hospital building, Sajjapuram, Tanuku' },
   { path: '/assets/gallery/hospital-exterior-1200.webp', caption: 'Hospital exterior' },
-  { path: '/assets/gallery/consultation-room-1200.webp', caption: 'Consultation room' },
   { path: '/assets/gallery/hospital-exterior-dusk-1200.webp', caption: 'Hospital exterior at dusk' },
   { path: '/assets/gallery/pharmacy-1200.webp', caption: 'Pharmacy' },
   { path: '/assets/gallery/reception-768.webp', caption: 'Reception' },

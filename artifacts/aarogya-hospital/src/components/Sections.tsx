@@ -321,7 +321,6 @@ export function FAQ() {
 
 const galleryPhotos = [
   { src: '/assets/gallery/hospital-exterior.png', srcSet: '/assets/gallery/hospital-exterior-480.webp 480w, /assets/gallery/hospital-exterior-1200.webp 1200w', caption: 'Hospital exterior', alt: `Hospital exterior at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 1302, height: 768 },
-  { src: '/assets/gallery/consultation-room.png', srcSet: '/assets/gallery/consultation-room-480.webp 480w, /assets/gallery/consultation-room-1200.webp 1200w', caption: 'Consultation room', alt: `Consultation room at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 1213, height: 768 },
   { src: '/assets/gallery/hospital-exterior-dusk.png', srcSet: '/assets/gallery/hospital-exterior-dusk-480.webp 480w, /assets/gallery/hospital-exterior-dusk-1200.webp 1200w', caption: 'Hospital exterior at dusk', alt: `Hospital exterior at dusk at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 1585, height: 768 },
   { src: '/assets/gallery/pharmacy.png', srcSet: '/assets/gallery/pharmacy-480.webp 480w, /assets/gallery/pharmacy-1200.webp 1200w', caption: 'Pharmacy', alt: `Pharmacy counter at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 1615, height: 768 },
   { src: '/assets/gallery/reception.png', srcSet: '/assets/gallery/reception-480.webp 480w, /assets/gallery/reception-768.webp 768w', caption: 'Reception', alt: `Reception desk at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 768, height: 1610 },
@@ -544,10 +543,14 @@ export function HospitalGallery() {
                 <source type="image/webp" srcSet={photo.srcSet} sizes={index === 0 ? '(max-width: 767px) 100vw, 50vw' : '(max-width: 767px) 50vw, 24vw'} />
                 <img src={photo.src} alt={t.gallery.alt(t.gallery.captions[index])} loading="lazy" decoding="async" width={photo.width} height={photo.height} />
               </picture>
-              <span className="gallery-caption">{t.gallery.captions[index]}</span>
             </button>
           ))}
         </div>
+        <Reveal className="gallery-more">
+          <a className="button button-outline" href={HOSPITAL_INFO.googleMapsUrl} target="_blank" rel="noopener noreferrer" aria-label={t.gallery.moreAria}>
+            <span>{t.gallery.more}</span><Icon name="external" />
+          </a>
+        </Reveal>
       </div>
       {activeIndex !== null && (
         <div
@@ -580,7 +583,6 @@ export function HospitalGallery() {
                   </picture>
                 );
               })}
-              <span className="gallery-lightbox-caption">{t.gallery.captions[pendingIndex ?? activeIndex]}</span>
               <button className="gallery-close" ref={closeButton} type="button" aria-label={t.gallery.close} onClick={closeLightbox}>×</button>
             </div>
             <button className="gallery-arrow gallery-arrow-next" type="button" aria-label={t.gallery.next} onClick={() => movePhoto(1)}>›</button>

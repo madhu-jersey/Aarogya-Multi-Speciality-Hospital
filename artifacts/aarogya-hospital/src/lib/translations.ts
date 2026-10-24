@@ -144,7 +144,9 @@ const en = {
   gallery: {
     title: ['Inside ', BRAND_MARK, ''] as Title,
     subline: 'A look at our hospital.',
-    captions: ['Hospital exterior', 'Consultation room', 'Hospital exterior at dusk', 'Pharmacy', 'Reception'],
+    captions: ['Hospital exterior', 'Hospital exterior at dusk', 'Pharmacy', 'Reception'],
+    more: 'View more photos',
+    moreAria: 'View more photos of the hospital on Google Maps (opens in a new tab)',
     alt: (caption: string) => `${caption} at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`,
     open: (caption: string) => `Open ${caption} photo`,
     dialog: 'Hospital gallery',
@@ -387,7 +389,9 @@ const te: Dictionary = {
   gallery: {
     title: ['', BRAND_MARK, ' హాస్పిటల్ లోపల'],
     subline: 'మా హాస్పిటల్‌ను ఒకసారి చూడండి.',
-    captions: ['హాస్పిటల్ బయటి దృశ్యం', 'కన్సల్టేషన్ గది', 'సాయంత్రం వేళ హాస్పిటల్', 'ఫార్మసీ', 'రిసెప్షన్'],
+    captions: ['హాస్పిటల్ బయటి దృశ్యం', 'సాయంత్రం వేళ హాస్పిటల్', 'ఫార్మసీ', 'రిసెప్షన్'],
+    more: 'మరిన్ని ఫోటోలు చూడండి',
+    moreAria: 'గూగుల్ మ్యాప్స్‌లో హాస్పిటల్ మరిన్ని ఫోటోలు చూడండి (కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)',
     alt: (caption: string) => `${caption}, ${TELUGU_NAME}, సజ్జాపురం, తణుకు`,
     open: (caption: string) => `${caption} ఫోటో తెరవండి`,
     dialog: 'హాస్పిటల్ గ్యాలరీ',
