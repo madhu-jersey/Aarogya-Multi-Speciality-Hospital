@@ -602,8 +602,8 @@ export function HospitalGallery() {
             {morePhotos.map((photo, offset) => renderTile(photo, featuredPhotos.length + offset, 'gallery-more-tile', '(max-width: 767px) 50vw, 25vw'))}
           </div>
         )}
-        {morePhotos.length > 0 && (
-          <div className="gallery-more" ref={moreButtonRow}>
+        <div className="gallery-more" ref={moreButtonRow}>
+          {morePhotos.length > 0 ? (
             <button
               className={`button button-outline gallery-more-toggle${showMore ? ' is-open' : ''}`}
               type="button"
@@ -613,8 +613,13 @@ export function HospitalGallery() {
             >
               <span>{showMore ? t.gallery.less : t.gallery.more(morePhotos.length)}</span><Icon name="down" />
             </button>
-          </div>
-        )}
+          ) : (
+            // No extra photos yet: browse every photo full screen instead.
+            <button className="button button-outline gallery-more-toggle" type="button" onClick={(event) => openPhoto(0, event.currentTarget)}>
+              <span>{t.gallery.browse}</span><Icon name="arrow" />
+            </button>
+          )}
+        </div>
       </div>
       {activeIndex !== null && (
         <div
