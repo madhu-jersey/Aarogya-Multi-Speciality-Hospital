@@ -2,6 +2,9 @@ import { DOCTORS, FAQ_ITEMS, HOSPITAL_ADDRESS_DISPLAY, HOSPITAL_INFO } from './h
 
 export type Lang = 'en' | 'te';
 
+// Placed in a heading's accent slot to render the AAROGYA wordmark image instead of text.
+export const BRAND_MARK = '__aarogya_wordmark__';
+
 type DoctorText = { name: string; department: string; care: string; timings: string[] };
 // Heading text split around the accented word: [before, accent, after].
 type Title = [string, string, string];
@@ -59,7 +62,7 @@ const en = {
   },
   trust: ['24/7 emergency services', '24/7 ambulance', '24/7 pharmacy', '24/7 laboratory', 'ICU and HDU', 'Advanced operation theatres'],
   about: {
-    title: ['About ', 'Aarogya', ' Multi Speciality Hospital'] as Title,
+    title: ['About ', BRAND_MARK, ' Multi Speciality Hospital'] as Title,
     body: `${HOSPITAL_INFO.name} in ${HOSPITAL_INFO.locality}, near ${HOSPITAL_INFO.nearbyCity}, offers corporate-level medical services for everyone, with specialist doctors across pulmonology, general medicine, surgery, urology, and gynaecology, and 24x7 emergency care.`,
     features: ['Pulmonology and general medicine', 'Surgery and urology', "Women's and emergency care", 'Laboratory, pharmacy, and ICU'],
     meetDoctors: 'Meet our doctors',
@@ -125,7 +128,7 @@ const en = {
     list: Object.fromEntries(DOCTORS.map((doctor) => [doctor.initials, { name: doctor.name, department: doctor.department, care: doctor.care, timings: [...doctor.timings] }])) as Record<string, DoctorText>,
   },
   why: {
-    title: ['Why choose ', 'Aarogya', ''] as Title,
+    title: ['Why choose ', BRAND_MARK, ''] as Title,
     subline: 'Corporate-level medical care for everyone, provided by specialist doctors.',
     reasons: [
       { title: '24/7 emergency care', line: 'Emergency services run around the clock, with 24/7 ambulance support.' },
@@ -139,7 +142,7 @@ const en = {
     items: FAQ_ITEMS.map((item) => ({ question: item.question as string, answer: item.answer as string })),
   },
   gallery: {
-    title: ['Inside ', 'Aarogya', ''] as Title,
+    title: ['Inside ', BRAND_MARK, ''] as Title,
     subline: 'A look at our hospital.',
     captions: ['Hospital exterior', 'Consultation room', 'Hospital exterior at dusk', 'Pharmacy', 'Reception'],
     alt: (caption: string) => `${caption} at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`,
@@ -251,7 +254,7 @@ const te: Dictionary = {
   },
   trust: ['24/7 అత్యవసర సేవలు', '24/7 అంబులెన్స్', '24/7 ఫార్మసీ', '24/7 ల్యాబొరేటరీ', 'ఐసీయూ మరియు హెచ్‌డీయూ', 'అధునాతన ఆపరేషన్ థియేటర్లు'],
   about: {
-    title: ['', 'ఆరోగ్య', ' మల్టీ స్పెషాలిటీ హాస్పిటల్ గురించి'],
+    title: ['', BRAND_MARK, ' మల్టీ స్పెషాలిటీ హాస్పిటల్ గురించి'],
     body: 'తణుకు సమీపంలోని సజ్జాపురంలో ఉన్న ఆరోగ్య మల్టీ స్పెషాలిటీ హాస్పిటల్ అందరికీ కార్పొరేట్ స్థాయి వైద్య సేవలు అందిస్తుంది. పల్మనాలజీ, జనరల్ మెడిసిన్, సర్జరీ, యూరాలజీ, గైనకాలజీ విభాగాల్లో నిపుణులైన డాక్టర్లు, 24x7 అత్యవసర సేవలు ఇక్కడ అందుబాటులో ఉన్నాయి.',
     features: ['పల్మనాలజీ మరియు జనరల్ మెడిసిన్', 'సర్జరీ మరియు యూరాలజీ', 'మహిళల మరియు అత్యవసర వైద్యం', 'ల్యాబ్, ఫార్మసీ మరియు ఐసీయూ'],
     meetDoctors: 'మా డాక్టర్లను కలవండి',
@@ -362,7 +365,7 @@ const te: Dictionary = {
     },
   },
   why: {
-    title: ['ఎందుకు ', 'ఆరోగ్య', '?'],
+    title: ['ఎందుకు ', BRAND_MARK, '?'],
     subline: 'నిపుణులైన డాక్టర్లతో, అందరికీ కార్పొరేట్ స్థాయి వైద్యం.',
     reasons: [
       { title: '24/7 అత్యవసర వైద్యం', line: '24/7 అంబులెన్స్ సహాయంతో, అత్యవసర సేవలు రోజంతా అందుబాటులో ఉంటాయి.' },
@@ -382,7 +385,7 @@ const te: Dictionary = {
     ],
   },
   gallery: {
-    title: ['', 'ఆరోగ్య', ' హాస్పిటల్ లోపల'],
+    title: ['', BRAND_MARK, ' హాస్పిటల్ లోపల'],
     subline: 'మా హాస్పిటల్‌ను ఒకసారి చూడండి.',
     captions: ['హాస్పిటల్ బయటి దృశ్యం', 'కన్సల్టేషన్ గది', 'సాయంత్రం వేళ హాస్పిటల్', 'ఫార్మసీ', 'రిసెప్షన్'],
     alt: (caption: string) => `${caption}, ${TELUGU_NAME}, సజ్జాపురం, తణుకు`,

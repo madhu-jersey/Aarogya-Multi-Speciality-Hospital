@@ -4,6 +4,7 @@ import { DIRECTIONS, GOOGLE_REVIEWS, Icon, magneticPointerLeave, magneticPointer
 import { ClinicHours } from './Hero';
 import { DOCTORS, HOSPITAL_INFO, HOSPITAL_MAP_EMBED } from '@/lib/hospital';
 import { useLanguage } from '@/lib/i18n';
+import { BRAND_MARK } from '@/lib/translations';
 
 const reviews = [
   {
@@ -43,6 +44,27 @@ function Heading({ eyebrow, children, subline }: { eyebrow?: string; children: R
 }
 
 function TitleText({ title }: { title: [string, string, string] }) {
+  if (title[1] === BRAND_MARK) {
+    return (
+      <>
+        {title[0]}
+        <em className="heading-brand">
+          <img
+            className="heading-wordmark"
+            src="/assets/aarogya-wordmark-600.webp"
+            srcSet="/assets/aarogya-wordmark-600.webp 600w, /assets/aarogya-wordmark.webp 1200w"
+            sizes="240px"
+            alt="Aarogya"
+            width="600"
+            height="136"
+            loading="lazy"
+            decoding="async"
+          />
+        </em>
+        {title[2]}
+      </>
+    );
+  }
   return <>{title[0]}<em>{title[1]}</em>{title[2]}</>;
 }
 

@@ -1554,3 +1554,7 @@ main, footer, .nav { transition: opacity 180ms ease; }
   from { opacity: 0; translate: 0 var(--reveal-y); }
   to { opacity: 1; translate: 0 0; }
 }
+
+/* AAROGYA wordmark inside section headings: scales with the heading and sits on its baseline like a capitalised word. */
+h2 .heading-brand { display: inline-block; font-style: normal; white-space: nowrap; }
+.heading-wordmark { display: inline-block; width: auto; height: .8em; max-width: none; margin: 0 .04em; vertical-align: baseline; }
