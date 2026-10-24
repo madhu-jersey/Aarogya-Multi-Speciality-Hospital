@@ -319,12 +319,33 @@ export function FAQ() {
   );
 }
 
-const galleryPhotos = [
-  { src: '/assets/gallery/hospital-exterior.png', srcSet: '/assets/gallery/hospital-exterior-480.webp 480w, /assets/gallery/hospital-exterior-1200.webp 1200w', caption: 'Hospital exterior', alt: `Hospital exterior at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 1302, height: 768 },
-  { src: '/assets/gallery/hospital-exterior-dusk.png', srcSet: '/assets/gallery/hospital-exterior-dusk-480.webp 480w, /assets/gallery/hospital-exterior-dusk-1200.webp 1200w', caption: 'Hospital exterior at dusk', alt: `Hospital exterior at dusk at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 1585, height: 768 },
-  { src: '/assets/gallery/pharmacy.png', srcSet: '/assets/gallery/pharmacy-480.webp 480w, /assets/gallery/pharmacy-1200.webp 1200w', caption: 'Pharmacy', alt: `Pharmacy counter at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 1615, height: 768 },
-  { src: '/assets/gallery/reception.png', srcSet: '/assets/gallery/reception-480.webp 480w, /assets/gallery/reception-768.webp 768w', caption: 'Reception', alt: `Reception desk at ${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}, ${HOSPITAL_INFO.region}`, width: 768, height: 1610 },
+type GalleryPhoto = { src: string; srcSet?: string; width: number; height: number };
+
+// The four photos always shown in the main grid.
+const featuredPhotos: GalleryPhoto[] = [
+  { src: '/assets/gallery/hospital-exterior.png', srcSet: '/assets/gallery/hospital-exterior-480.webp 480w, /assets/gallery/hospital-exterior-1200.webp 1200w', width: 1302, height: 768 },
+  { src: '/assets/gallery/hospital-exterior-dusk.png', srcSet: '/assets/gallery/hospital-exterior-dusk-480.webp 480w, /assets/gallery/hospital-exterior-dusk-1200.webp 1200w', width: 1585, height: 768 },
+  { src: '/assets/gallery/pharmacy.png', srcSet: '/assets/gallery/pharmacy-480.webp 480w, /assets/gallery/pharmacy-1200.webp 1200w', width: 1615, height: 768 },
+  { src: '/assets/gallery/reception.png', srcSet: '/assets/gallery/reception-480.webp 480w, /assets/gallery/reception-768.webp 768w', width: 768, height: 1610 },
 ];
+
+// Extra photos behind "View more photos": every image file in src/assets/gallery-more/, ordered by file name.
+// Their real size is learned when they load; 4:3 is only the starting guess.
+const morePhotoUrls = import.meta.glob<string>('../assets/gallery-more/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP}', { eager: true, query: '?url', import: 'default' });
+const morePhotos: GalleryPhoto[] = Object.keys(morePhotoUrls)
+  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+  .map((file) => ({ src: morePhotoUrls[file], width: 1200, height: 900 }));
+
+const galleryPhotos = [...featuredPhotos, ...morePhotos];
+const measuredSizes = new Map<number, { width: number; height: number }>();
+
+function photoSize(index: number) {
+  return measuredSizes.get(index) ?? galleryPhotos[index];
+}
+
+function rememberSize(index: number, image: HTMLImageElement) {
+  if (image.naturalWidth && image.naturalHeight) measuredSizes.set(index, { width: image.naturalWidth, height: image.naturalHeight });
+}
 
 const galleryImageCache = new Map<number, Promise<HTMLImageElement>>();
 const gallerySizes = '(max-width: 1100px) 90vw, 1080px';
@@ -338,11 +359,12 @@ function loadDecodedGalleryPhoto(index: number) {
     image.onload = () => resolve(image);
     image.onerror = () => reject(new Error(`Unable to load ${photo.src}`));
     image.sizes = gallerySizes;
-    image.srcset = photo.srcSet;
+    if (photo.srcSet) image.srcset = photo.srcSet;
     image.src = photo.src;
     if (image.complete && image.naturalWidth) resolve(image);
   }).then(async (loadedImage) => {
     if (typeof loadedImage.decode === 'function') await loadedImage.decode();
+    rememberSize(index, loadedImage);
     return loadedImage;
   }).catch((error: unknown) => {
     galleryImageCache.delete(index);
@@ -369,6 +391,8 @@ export function HospitalGallery() {
   const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null);
   const [isCrossfading, setIsCrossfading] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const moreButtonRow = useRef<HTMLDivElement | null>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
   const closeButton = useRef<HTMLButtonElement | null>(null);
   const dialog = useRef<HTMLDivElement | null>(null);
@@ -400,8 +424,8 @@ export function HospitalGallery() {
     const request = ++switchRequest.current;
     void loadDecodedGalleryPhoto(nextIndex).then((decodedImage) => {
       if (request !== switchRequest.current) return;
-      const width = decodedImage.naturalWidth || galleryPhotos[nextIndex].width;
-      const height = decodedImage.naturalHeight || galleryPhotos[nextIndex].height;
+      const width = decodedImage.naturalWidth || photoSize(nextIndex).width;
+      const height = decodedImage.naturalHeight || photoSize(nextIndex).height;
       pendingIndexRef.current = nextIndex;
       setPendingIndex(nextIndex);
       setFrameSize(getLightboxSize(width, height));
@@ -420,7 +444,7 @@ export function HospitalGallery() {
           else {
             pendingIndexRef.current = null;
             setPendingIndex(null);
-            setFrameSize(getLightboxSize(galleryPhotos[activeIndex].width, galleryPhotos[activeIndex].height));
+            setFrameSize(getLightboxSize(photoSize(activeIndex).width, photoSize(activeIndex).height));
             switchLocked.current = false;
           }
           return;
@@ -445,7 +469,7 @@ export function HospitalGallery() {
           if (request !== switchRequest.current) return;
           pendingIndexRef.current = null;
           setPendingIndex(null);
-          setFrameSize(getLightboxSize(galleryPhotos[activeIndex].width, galleryPhotos[activeIndex].height));
+          setFrameSize(getLightboxSize(photoSize(activeIndex).width, photoSize(activeIndex).height));
           switchLocked.current = false;
         });
       };
@@ -507,7 +531,7 @@ export function HospitalGallery() {
   useEffect(() => {
     if (activeIndex === null) return;
     const resizeFrame = () => {
-      const photo = galleryPhotos[pendingIndexRef.current ?? activeIndex];
+      const photo = photoSize(pendingIndexRef.current ?? activeIndex);
       setFrameSize(getLightboxSize(photo.width, photo.height));
     };
     window.addEventListener('resize', resizeFrame);
@@ -520,37 +544,77 @@ export function HospitalGallery() {
     if (unlockSwitchTimer.current !== null) window.clearTimeout(unlockSwitchTimer.current);
   }, []);
 
+  // Named photos use their caption; extra photos are described by number.
+  const photoLabel = (index: number) => t.gallery.captions[index] ?? t.gallery.photo(index + 1);
+  const photoAlt = (index: number) => t.gallery.alt(photoLabel(index));
+
+  const openPhoto = (index: number, trigger: HTMLButtonElement) => {
+    opener.current = trigger;
+    clearSwitch();
+    setIsClosing(false);
+    setFrameSize(getLightboxSize(photoSize(index).width, photoSize(index).height));
+    setActiveIndex(index);
+    // Extra photos have no size until loaded; correct the frame once the real size is known.
+    void loadDecodedGalleryPhoto(index).then(() => {
+      setFrameSize((current) => (current ? getLightboxSize(photoSize(index).width, photoSize(index).height) : current));
+    }).catch(() => undefined);
+  };
+
+  const toggleMore = () => {
+    const closing = showMore;
+    setShowMore(!showMore);
+    // After collapsing, keep the button in view instead of leaving the visitor far down the page.
+    if (closing) requestAnimationFrame(() => moreButtonRow.current?.scrollIntoView({ block: 'center' }));
+  };
+
+  const renderTile = (photo: GalleryPhoto, index: number, className: string, sizes: string) => (
+    <button
+      className={`gallery-tile ${className} reveal`}
+      type="button"
+      key={photo.src}
+      aria-label={t.gallery.open(photoLabel(index))}
+      onClick={(event) => openPhoto(index, event.currentTarget)}
+    >
+      <picture>
+        {photo.srcSet && <source type="image/webp" srcSet={photo.srcSet} sizes={sizes} />}
+        <img
+          src={photo.src}
+          alt={photoAlt(index)}
+          loading="lazy"
+          decoding="async"
+          width={photo.width}
+          height={photo.height}
+          onLoad={(event) => rememberSize(index, event.currentTarget)}
+        />
+      </picture>
+    </button>
+  );
+
   return (
     <section className="section gallery-section" id="gallery">
       <div className="container">
         <Heading subline={t.gallery.subline}><TitleText title={t.gallery.title} /></Heading>
         <div className="gallery-grid">
-          {galleryPhotos.map((photo, index) => (
-            <button
-              className={`gallery-tile gallery-tile-${index + 1} reveal`}
-              type="button"
-              key={photo.src}
-              aria-label={t.gallery.open(t.gallery.captions[index])}
-              onClick={(event) => {
-                opener.current = event.currentTarget;
-                clearSwitch();
-                setIsClosing(false);
-                setFrameSize(getLightboxSize(photo.width, photo.height));
-                setActiveIndex(index);
-              }}
-            >
-              <picture>
-                <source type="image/webp" srcSet={photo.srcSet} sizes={index === 0 ? '(max-width: 767px) 100vw, 50vw' : '(max-width: 767px) 50vw, 24vw'} />
-                <img src={photo.src} alt={t.gallery.alt(t.gallery.captions[index])} loading="lazy" decoding="async" width={photo.width} height={photo.height} />
-              </picture>
-            </button>
-          ))}
+          {featuredPhotos.map((photo, index) => renderTile(photo, index, `gallery-tile-${index + 1}`, index === 0 ? '(max-width: 767px) 100vw, 50vw' : '(max-width: 767px) 50vw, 24vw'))}
         </div>
-        <Reveal className="gallery-more">
-          <a className="button button-outline" href={HOSPITAL_INFO.googleMapsUrl} target="_blank" rel="noopener noreferrer" aria-label={t.gallery.moreAria}>
-            <span>{t.gallery.more}</span><Icon name="external" />
-          </a>
-        </Reveal>
+        {showMore && (
+          <div className="gallery-more-grid" id="gallery-more-grid">
+            {morePhotos.map((photo, offset) => renderTile(photo, featuredPhotos.length + offset, 'gallery-more-tile', '(max-width: 767px) 50vw, 25vw'))}
+          </div>
+        )}
+        {morePhotos.length > 0 && (
+          <div className="gallery-more" ref={moreButtonRow}>
+            <button
+              className={`button button-outline gallery-more-toggle${showMore ? ' is-open' : ''}`}
+              type="button"
+              aria-expanded={showMore}
+              aria-controls="gallery-more-grid"
+              onClick={toggleMore}
+            >
+              <span>{showMore ? t.gallery.less : t.gallery.more(morePhotos.length)}</span><Icon name="down" />
+            </button>
+          </div>
+        )}
       </div>
       {activeIndex !== null && (
         <div
@@ -578,8 +642,8 @@ export function HospitalGallery() {
                 const isIncoming = index === pendingIndex;
                 return (
                   <picture className={`gallery-lightbox-photo${isIncoming ? ' is-incoming' : ' is-outgoing'}`} key={photo.src}>
-                    <source type="image/webp" srcSet={photo.srcSet} sizes={gallerySizes} />
-                    <img ref={isIncoming ? incomingImage : undefined} src={photo.src} alt={t.gallery.alt(t.gallery.captions[index])} width={photo.width} height={photo.height} />
+                    {photo.srcSet && <source type="image/webp" srcSet={photo.srcSet} sizes={gallerySizes} />}
+                    <img ref={isIncoming ? incomingImage : undefined} src={photo.src} alt={photoAlt(index)} width={photoSize(index).width} height={photoSize(index).height} />
                   </picture>
                 );
               })}
