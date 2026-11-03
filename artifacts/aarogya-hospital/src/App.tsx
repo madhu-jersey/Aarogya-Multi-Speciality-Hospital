@@ -6,7 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import { Hero } from './components/Hero';
-import { Header } from './components/common';
+import { Header, MobileActionBar } from './components/common';
 import { About, Doctors, FAQ, HospitalGallery, OurStory, Reviews, Services, Visit, WhyChooseUs } from './components/Sections';
 import { Footer } from './components/Footer';
 import { updateSearchMetadata } from './lib/seo';
@@ -93,6 +93,7 @@ function App() {
                     <FAQ />
                   </main>
                   <Footer />
+                  <MobileActionBar />
                 </>
               </Route>
               <Route component={NotFound} />

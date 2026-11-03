@@ -183,6 +183,11 @@ const en = {
     directions: 'Get directions',
     mapTitle: `${HOSPITAL_INFO.name}, ${HOSPITAL_INFO.locality}`,
   },
+  actionBar: {
+    label: 'Quick actions',
+    call: 'Call now',
+    directions: 'Directions',
+  },
   instagram: {
     follow: 'Follow us on Instagram',
     blurb: 'Hospital updates, health tips, and news from our team.',
@@ -429,6 +434,11 @@ const te: Dictionary = {
     callNow: 'కాల్ చేయండి',
     directions: 'దారి చూడండి',
     mapTitle: `${TELUGU_NAME}, సజ్జాపురం`,
+  },
+  actionBar: {
+    label: 'త్వరిత చర్యలు',
+    call: 'కాల్ చేయండి',
+    directions: 'దారి',
   },
   instagram: {
     follow: 'ఇన్‌స్టాగ్రామ్‌లో మమ్మల్ని ఫాలో అవ్వండి',

@@ -1678,3 +1678,60 @@ h2 .heading-brand { display: inline-block; font-style: normal; white-space: nowr
 @media (max-width: 389px) {
   .hero-actions { grid-template-columns: minmax(0, 1fr); gap: 10px; }
 }
+
+/* ==========================================================================
+   Phone premium patterns: bottom action bar and swipeable card rows.
+   ========================================================================== */
+.mobile-action-bar { display: none; }
+@media (max-width: 767px) {
+  /* The bar takes over Call on phones, so the header keeps just the logo and menu. */
+  .header-call { display: none; }
+
+  .mobile-action-bar {
+    position: fixed;
+    z-index: 90;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(168,25,95,.1);
+    background: rgba(255,255,255,.97);
+    box-shadow: 0 -10px 30px rgba(58,31,46,.1);
+    transform: translateY(110%);
+    visibility: hidden;
+    transition: transform 420ms var(--ease-premium), visibility 0s linear 420ms;
+  }
+  .mobile-action-bar.is-visible { transform: translateY(0); visibility: visible; transition: transform 420ms var(--ease-premium), visibility 0s; }
+  .mobile-action-bar .button { min-height: 50px; padding: 0 12px; gap: 8px; font-size: 15px; white-space: nowrap; }
+  .mobile-action-bar .button-outline { background: #fff; border-color: var(--teal); color: var(--teal-dark); }
+  .mobile-action-bar .button-outline:before { background: rgba(14,124,123,.08); }
+  /* Room for the bar at the end of the page. */
+  .footer { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+
+  /* Swipeable rows: full-bleed track, cards snap to the page's left margin, next card peeks in. */
+  .services-grid, .reviews-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--phone-gutter));
+    padding: 6px var(--phone-gutter) 20px;
+    scroll-padding-inline: var(--phone-gutter);
+  }
+  .services-grid::-webkit-scrollbar, .reviews-grid::-webkit-scrollbar { display: none; }
+  .services-grid > .service-card, .reviews-grid > .review-card { flex: 0 0 86%; min-width: 0; scroll-snap-align: start; }
+  /* Off-screen cards in a row never scroll into view vertically, so they skip the scroll reveal. */
+  .has-reveal-observer .services-grid > .reveal, .has-reveal-observer .reviews-grid > .reveal { opacity: 1 !important; translate: none !important; animation: none !important; }
+  .reviews-layout > .review-cta { margin-top: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-action-bar, .mobile-action-bar.is-visible { transition: none; }
+}
+/* Page side margin on phones, matching .container (20px, or 16px below 390px). */
+@media (max-width: 767px) { :root { --phone-gutter: 20px; } }
+@media (max-width: 389px) { :root { --phone-gutter: 16px; } }

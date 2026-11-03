@@ -57,6 +57,29 @@ export function magneticPointerLeave(event: ReactPointerEvent<HTMLAnchorElement>
   event.currentTarget.style.setProperty('--magnet-y', '0px');
 }
 
+// Phones only: Call and Directions in thumb reach once the hero's own buttons have scrolled away.
+export function MobileActionBar() {
+  const { t } = useLanguage();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const heroActions = document.querySelector('.hero-actions');
+    if (!heroActions) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setVisible(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+    });
+    observer.observe(heroActions);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <nav className={`mobile-action-bar${visible ? ' is-visible' : ''}`} aria-label={t.actionBar.label}>
+      <a className="button" href={TEL}><Icon name="phone" />{t.actionBar.call}</a>
+      <a className="button button-outline" href={DIRECTIONS} target="_blank" rel="noopener noreferrer"><Icon name="pin" /><span>{t.actionBar.directions}</span></a>
+    </nav>
+  );
+}
+
 const NAV_IDS = ['services', 'doctors', 'gallery', 'reviews', 'visit', 'faq'] as const;
 
 export function Header() {
