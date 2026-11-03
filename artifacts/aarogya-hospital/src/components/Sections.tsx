@@ -1,5 +1,5 @@
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { Activity, Ambulance, ArrowUpRight, BriefcaseMedical, Building2, Check, Clock3, FlaskConical, HeartPulse, Pill, Plus, Quote, Sprout, SquarePen, Stethoscope, Syringe, TrendingUp, Truck, UsersRound } from 'lucide-react';
+import { Activity, Ambulance, BriefcaseMedical, Building2, Check, Clock3, FlaskConical, HeartPulse, Plus, Quote, Sprout, SquarePen, Stethoscope, Syringe, TrendingUp, UsersRound } from 'lucide-react';
 import { DIRECTIONS, GOOGLE_REVIEWS, Icon, magneticPointerLeave, magneticPointerMove, PHONE, TEL } from './common';
 import { ClinicHours } from './Hero';
 import { DOCTORS, HOSPITAL_INFO, HOSPITAL_MAP_EMBED } from '@/lib/hospital';
@@ -184,7 +184,6 @@ export function Services() {
               <ul className="service-list">
                 {card.services.map((service, index) => <li key={index}><Check className="icon" />{service}</li>)}
               </ul>
-              <ArrowUpRight className="icon service-arrow" />
             </article>
             );
           })}
@@ -712,18 +711,6 @@ export function Reviews() {
   );
 }
 
-export function Facilities() {
-  const { t } = useLanguage();
-  const facilityIcons = [Truck, FlaskConical, Pill, HeartPulse, Syringe];
-  return (
-    <section className="facilities-band" aria-label={t.facilities.aria}>
-      <div className="container facilities-grid">
-        {facilityIcons.map((FacilityIcon, index) => <div className="facility-item reveal" key={index}><FacilityIcon className="icon" /><span>{t.facilities.items[index]}</span></div>)}
-      </div>
-    </section>
-  );
-}
-
 export function Visit() {
   const { t } = useLanguage();
   const [mapActive, setMapActive] = useState(false);
@@ -739,7 +726,6 @@ export function Visit() {
             </div>
             <p className="address-block reveal">
               <strong>{t.visit.address}</strong>
-              <span>{t.visit.addressLine}</span>
             </p>
             <div className="reveal">
               <a className="phone-primary button magnetic" href={TEL} onPointerMove={magneticPointerMove} onPointerLeave={magneticPointerLeave}>{PHONE}</a>
@@ -747,7 +733,6 @@ export function Visit() {
                 <a href="tel:+919966193444">+91 99661 93444</a>              </div>
             </div>
             <ClinicHours className="visit-hours reveal" />
-            <a className="visit-emergency reveal magnetic" href={TEL} onPointerMove={magneticPointerMove} onPointerLeave={magneticPointerLeave}>{t.visit.emergency}</a>
             <a className="instagram-card reveal" href={HOSPITAL_INFO.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label={t.instagram.aria}>
               <span className="instagram-card-icon"><Icon name="instagram" /></span>
               <span className="instagram-card-copy">
@@ -761,7 +746,6 @@ export function Visit() {
           <div>
             <div className="map-card reveal" onClick={() => setMapActive(true)} onPointerLeave={() => setMapActive(false)}>
               <div className="map-shimmer" />
-              <a className="button button-small map-directions" href={DIRECTIONS} target="_blank" rel="noopener noreferrer">{t.visit.goToLocation}</a>
               <iframe
                 title={t.visit.mapTitle}
                 src={HOSPITAL_MAP_EMBED}
@@ -772,7 +756,6 @@ export function Visit() {
               />
             </div>
             <div className="map-controls">
-              <a className="button" href={TEL}>{t.visit.callNow}</a>
               <a className="button button-outline" href={DIRECTIONS} target="_blank" rel="noopener noreferrer"><span>{t.visit.directions}</span><Icon name="pin" /></a>
             </div>
           </div>

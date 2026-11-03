@@ -39,7 +39,7 @@ const en = {
     mobileNav: 'Mobile navigation',
   },
   hero: {
-    pill: `${HOSPITAL_INFO.name} · ${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity}`,
+    pill: `${HOSPITAL_INFO.locality}, ${HOSPITAL_INFO.nearbyCity} · Since ${HOSPITAL_INFO.foundingYear}`,
     titleLines: ['Multi Speciality', 'Hospital'],
     otherName: TELUGU_NAME,
     otherNameLang: 'te',
@@ -63,7 +63,7 @@ const en = {
   trust: ['24/7 emergency services', '24/7 ambulance', '24/7 pharmacy', '24/7 laboratory', 'ICU and HDU', 'Advanced operation theatres'],
   about: {
     title: ['About ', BRAND_MARK, ' Multi Speciality Hospital'] as Title,
-    body: `${HOSPITAL_INFO.name} in ${HOSPITAL_INFO.locality}, near ${HOSPITAL_INFO.nearbyCity}, offers corporate-level medical services for everyone, with specialist doctors across pulmonology, general medicine, surgery, urology, and gynaecology, and 24x7 emergency care.`,
+    body: `${HOSPITAL_INFO.name} in ${HOSPITAL_INFO.locality}, near ${HOSPITAL_INFO.nearbyCity}, brings specialist doctors in pulmonology, general medicine, surgery, urology, and gynaecology together with round-the-clock emergency care.`,
     features: ['Pulmonology and general medicine', 'Surgery and urology', "Women's and emergency care", 'Laboratory, pharmacy, and ICU'],
     meetDoctors: 'Meet our doctors',
   },
@@ -129,12 +129,12 @@ const en = {
   },
   why: {
     title: ['Why choose ', BRAND_MARK, ''] as Title,
-    subline: 'Corporate-level medical care for everyone, provided by specialist doctors.',
+    subline: "What families in and around Tanuku can count on, every time they walk in.",
     reasons: [
       { title: '24/7 emergency care', line: 'Emergency services run around the clock, with 24/7 ambulance support.' },
       { title: 'Specialist doctors', line: 'Pulmonology, general medicine, surgery, urology, and gynaecology under one roof.' },
       { title: 'Complete facilities', line: 'ICU and HDU, laboratory, pharmacy, and advanced operation theatres.' },
-      { title: 'Care for everyone', line: 'Corporate-level medical services for everyone in Sajjapuram.' },
+      { title: "Fair, affordable care", line: "Quality treatment with honest, affordable billing for every family." },
     ],
   },
   faq: {
@@ -158,7 +158,7 @@ const en = {
   },
   reviews: {
     title: ['What patients ', 'say', ''] as Title,
-    subline: 'Read more reviews on Google.',
+    subline: "Real experiences shared by patients and their families.",
     summaryAria: 'Google rating: 4.9 out of 5 from 114 reviews',
     starsAria: '5 out of 5 stars',
     count: '114 reviews',
@@ -235,7 +235,7 @@ const te: Dictionary = {
     mobileNav: 'మొబైల్ మెనూ',
   },
   hero: {
-    pill: `${TELUGU_NAME} · సజ్జాపురం, తణుకు`,
+    pill: `సజ్జాపురం, తణుకు · ${HOSPITAL_INFO.foundingYear} నుండి`,
     titleLines: ['మల్టీ స్పెషాలిటీ', 'హాస్పిటల్'],
     otherName: ENGLISH_NAME,
     otherNameLang: 'en',
@@ -259,7 +259,7 @@ const te: Dictionary = {
   trust: ['24/7 అత్యవసర సేవలు', '24/7 అంబులెన్స్', '24/7 ఫార్మసీ', '24/7 ల్యాబొరేటరీ', 'ఐసీయూ మరియు హెచ్‌డీయూ', 'అధునాతన ఆపరేషన్ థియేటర్లు'],
   about: {
     title: ['', BRAND_MARK, ' మల్టీ స్పెషాలిటీ హాస్పిటల్ గురించి'],
-    body: 'తణుకు సమీపంలోని సజ్జాపురంలో ఉన్న ఆరోగ్య మల్టీ స్పెషాలిటీ హాస్పిటల్ అందరికీ కార్పొరేట్ స్థాయి వైద్య సేవలు అందిస్తుంది. పల్మనాలజీ, జనరల్ మెడిసిన్, సర్జరీ, యూరాలజీ, గైనకాలజీ విభాగాల్లో నిపుణులైన డాక్టర్లు, 24x7 అత్యవసర సేవలు ఇక్కడ అందుబాటులో ఉన్నాయి.',
+    body: "తణుకు సమీపంలోని సజ్జాపురంలో ఉన్న ఆరోగ్య మల్టీ స్పెషాలిటీ హాస్పిటల్‌లో పల్మనాలజీ, జనరల్ మెడిసిన్, సర్జరీ, యూరాలజీ, గైనకాలజీ విభాగాల నిపుణులైన డాక్టర్లు, రోజంతా అత్యవసర సేవలు ఒకే చోట అందుబాటులో ఉన్నాయి.",
     features: ['పల్మనాలజీ మరియు జనరల్ మెడిసిన్', 'సర్జరీ మరియు యూరాలజీ', 'మహిళల మరియు అత్యవసర వైద్యం', 'ల్యాబ్, ఫార్మసీ మరియు ఐసీయూ'],
     meetDoctors: 'మా డాక్టర్లను కలవండి',
   },
@@ -370,12 +370,12 @@ const te: Dictionary = {
   },
   why: {
     title: ['ఎందుకు ', BRAND_MARK, '?'],
-    subline: 'నిపుణులైన డాక్టర్లతో, అందరికీ కార్పొరేట్ స్థాయి వైద్యం.',
+    subline: "తణుకు చుట్టుపక్కల కుటుంబాలు ప్రతిసారీ నమ్మకంగా ఆధారపడగలిగేవి ఇవి.",
     reasons: [
       { title: '24/7 అత్యవసర వైద్యం', line: '24/7 అంబులెన్స్ సహాయంతో, అత్యవసర సేవలు రోజంతా అందుబాటులో ఉంటాయి.' },
       { title: 'నిపుణులైన డాక్టర్లు', line: 'పల్మనాలజీ, జనరల్ మెడిసిన్, సర్జరీ, యూరాలజీ, గైనకాలజీ — అన్నీ ఒకే చోట.' },
       { title: 'పూర్తి సౌకర్యాలు', line: 'ఐసీయూ మరియు హెచ్‌డీయూ, ల్యాబొరేటరీ, ఫార్మసీ, అధునాతన ఆపరేషన్ థియేటర్లు.' },
-      { title: 'అందరికీ వైద్యం', line: 'సజ్జాపురంలో అందరికీ కార్పొరేట్ స్థాయి వైద్య సేవలు.' },
+      { title: "న్యాయమైన, తక్కువ ఖర్చు", line: "ప్రతి కుటుంబానికీ నాణ్యమైన చికిత్స, నిజాయితీగా, తక్కువ ఖర్చుతో." },
     ],
   },
   faq: {
@@ -405,7 +405,7 @@ const te: Dictionary = {
   },
   reviews: {
     title: ['రోగులు ', 'ఏమంటున్నారు', ''],
-    subline: 'గూగుల్‌లో మరిన్ని సమీక్షలు చదవండి.',
+    subline: "రోగులు, వారి కుటుంబాలు పంచుకున్న నిజమైన అనుభవాలు.",
     summaryAria: 'గూగుల్ రేటింగ్: 114 సమీక్షల నుండి 5కి 4.9',
     starsAria: '5కి 5 నక్షత్రాలు',
     count: '114 సమీక్షలు',
