@@ -193,6 +193,21 @@ export function Services() {
   );
 }
 
+// Fade a photo in only once it has fully loaded and decoded, so it never pops in half-painted.
+function revealWhenLoaded(image: HTMLImageElement | null) {
+  if (!image || image.classList.contains('is-loaded')) return;
+  const show = () => image.classList.add('is-loaded');
+  if (image.complete && image.naturalWidth) {
+    show();
+    return;
+  }
+  image.addEventListener('load', () => {
+    const decoded = typeof image.decode === 'function' ? image.decode() : Promise.resolve();
+    void decoded.catch(() => undefined).then(show);
+  }, { once: true });
+  image.addEventListener('error', show, { once: true });
+}
+
 export function Doctors() {
   const { t } = useLanguage();
 
@@ -213,6 +228,7 @@ export function Doctors() {
               style={{ '--card-delay': `${index * 120}ms` } as CSSProperties}
             >
               <div className="doctor-portrait">
+                <span className="doctor-photo-placeholder" style={{ backgroundImage: `url(${doctor.placeholder})` }} aria-hidden="true" />
                 <picture className="doctor-photo-picture">
                   <source type="image/webp" srcSet={`${photo}-800.webp 800w, ${photo}-1152.webp 1152w`} sizes="(max-width: 767px) 92vw, 560px" />
                   <img
@@ -223,6 +239,7 @@ export function Doctors() {
                     decoding="async"
                     width="1152"
                     height="768"
+                    ref={revealWhenLoaded}
                   />
                 </picture>
               </div>
